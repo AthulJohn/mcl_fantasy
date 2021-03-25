@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mcl_fantasy/pages/home.dart';
 import 'package:mcl_fantasy/pages/signin.dart';
-import 'package:mcl_fantasy/pages/signup.dart';
+import 'package:provider/provider.dart';
 
 void main() {
   runApp(MyApp());
@@ -11,7 +11,9 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return ChangeNotifierProvider<List>(
+      create: (context) => List,
+      child:MaterialApp(
       title: 'MCL Fantasy',
       theme: ThemeData(
         // This is the theme of your application.
@@ -25,11 +27,7 @@ class MyApp extends StatelessWidget {
         // is not restarted.
         primarySwatch: Colors.blue,
       ),
-      routes: {
-        'signin': (context) => Signin(),
-        'signup': (context) => SignUp(),
-        'home': (context) => Home()
-      },
+      routes: {'signin': (context) => Signin(), 'home': (context) => Home()},
     );
   }
 }
