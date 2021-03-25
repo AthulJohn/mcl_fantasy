@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mcl_fantasy/auth/sign.dart';
 
 class Signin extends StatefulWidget {
   @override
@@ -17,9 +18,24 @@ class _SigninState extends State<Signin> {
             Card(
               child: Column(
                 children: [
-                  Text('Signin'),
-                  TextField(),
-                  TextField(),
+                  TextButton(
+                    child: Text('Signin'),
+                    style: ButtonStyle(
+                      backgroundColor:
+                          MaterialStateProperty.resolveWith<Color>((_) {
+                        return Colors.red;
+                      }),
+                      shape: MaterialStateProperty.resolveWith<OutlinedBorder>(
+                          (_) {
+                        return RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(15));
+                      }),
+                    ),
+                    onPressed: () {
+                      AuthService().signInWithGoogle();
+                    },
+                  ),
+                  Text('Please sign in using your MACE mail id.'),
                 ],
               ),
             ),

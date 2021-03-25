@@ -10,21 +10,25 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        child: Column(
+        child: PageView(
           children: [
-            Image.network(
-                "https://drive.google.com/uc?export=view&id=1pkRm-_6c_3JOTD0vWOXfSB_EI8ImccJY"),
-            Card(
-              child: Column(
-                children: [
-                  Text('Signin'),
-                  TextField(),
-                  TextField(),
-                ],
-              ),
-            ),
-            Image.network(
-                "https://drive.google.com/uc?export=view&id=1WSDax83g2k3PC_R3-XU_YriW1F2Ulos3"),
+            Column(
+              children: [
+                Image.network(
+                    "https://drive.google.com/uc?export=view&id=1pkRm-_6c_3JOTD0vWOXfSB_EI8ImccJY"),
+                Card(
+                  child: Column(
+                    children: [
+                      Text('Signin'),
+                      TextField(),
+                      TextField(),
+                    ],
+                  ),
+                ),
+                Image.network(
+                    "https://drive.google.com/uc?export=view&id=1WSDax83g2k3PC_R3-XU_YriW1F2Ulos3"),
+              ],
+            )
           ],
         ),
       ),
