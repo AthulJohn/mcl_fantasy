@@ -205,13 +205,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.8.0"
-  percent_indicator:
-    dependency: transitive
-    description:
-      name: percent_indicator
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "2.1.9+1"
   plugin_platform_interface:
     dependency: transitive
     description:
@@ -219,15 +212,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.0.0"
-<<<<<<< HEAD
-  polls:
-    dependency: "direct main"
-    description:
-      name: polls
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.2.2"
-=======
   provider:
     dependency: "direct main"
     description:
@@ -235,7 +219,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "5.0.0"
->>>>>>> f8fb108374cbc33504b8e63e31f1cc78b2da7c60
   quiver:
     dependency: transitive
     description:
