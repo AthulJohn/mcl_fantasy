@@ -14,17 +14,27 @@ class Signin extends StatefulWidget {
 }
 
 class _SigninState extends State<Signin> {
-  void getTeams(context) async {
+  Future<void> getTeams(context) async {
+    int vote = 0;
     QuerySnapshot quesnap =
         await FirebaseFirestore.instance.collection('Fantasy Results').get();
+    DocumentSnapshot usersnap = await FirebaseFirestore.instance
+        .collection('Users')
+        .doc(Provider.of<Data>(context, listen: false).user.email)
+        .get();
     for (QueryDocumentSnapshot snap in quesnap.docs) {
+      if (usersnap.exists) if (usersnap.data().keys.contains(snap.id))
+        vote = usersnap.data()[snap.id];
+      else
+        vote = 0;
       Provider.of<Data>(context, listen: false).add(
           snap.id,
           Match(
               team1: snap.data()['Team1'],
               team2: snap.data()['Team2'],
               dateTime: DateTime.tryParse(snap.data()['Date'].toString()),
-              winner: snap.data()['Winner']));
+              winner: snap.data()['Winner'],
+              voted: vote));
     }
   }
 
@@ -60,7 +70,6 @@ class _SigninState extends State<Signin> {
                         }),
                       ),
                       onPressed: () async {
-                        getTeams(context);
                         User u = await AuthService().signInWithGoogle(context);
                         if (!u.email.endsWith('mace.ac.in') &&
                             u.email != 'johnychackopulickal@gmail.com') {
@@ -70,6 +79,8 @@ class _SigninState extends State<Signin> {
                         } else {
                           Provider.of<Data>(context, listen: false)
                               .updateuser(u);
+                          await getTeams(context);
+
                           if (u != null)
                             Navigator.pushReplacement(context,
                                 MaterialPageRoute(builder: (context) {

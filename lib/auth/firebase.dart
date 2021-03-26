@@ -21,14 +21,4 @@ class FireBaseService {
 
 //same logic for the next 2 functions...
 
-  void vote(context, int no, String id) async {
-    await firestore
-        .collection('Fantasy Results')
-        .doc(id)
-        .collection(no == 1 ? 'Team 1' : 'Team 2')
-        .add({
-      'user': Provider.of<Data>(context).user.email,
-      'time': DateTime.now().toString()
-    });
-  }
 }
