@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 
 class Match {
@@ -10,5 +11,13 @@ class Match {
 }
 
 class Data extends ChangeNotifier {
-  List<Match> matches;
+  User user;
+  Map<String, Match> matches = {};
+  void add(String id, Match mat) {
+    matches[id] = mat;
+  }
+
+  void updateuser(User fuser) {
+    user = fuser;
+  }
 }
