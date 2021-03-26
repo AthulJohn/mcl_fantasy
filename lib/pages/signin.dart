@@ -138,7 +138,7 @@ class _SigninState extends State<Signin> {
             ),
             Expanded(
               child: Image.network(
-                  "https://drive.google.com/uc?export=view&id=1WSDax83g2k3PC_R3-XU_YriW1F2Ulos3"),
+                  "https://drive.google.com/uc?export=view&id=1AFOecVT5hadOZyafBNeISMMK2SvlIVwc"),
             ),
           ],
         ),

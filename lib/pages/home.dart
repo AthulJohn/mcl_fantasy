@@ -19,7 +19,8 @@ class _HomeState extends State<Home> {
         .collection('Fantasy Results')
         .doc(id)
         .collection(no == 1 ? 'Team 1' : 'Team 2')
-        .add({
+        .doc(Provider.of<Data>(context, listen: false).user.email)
+        .set({
       'user': Provider.of<Data>(context, listen: false).user.email,
       'time': DateTime.now().toString()
     });
@@ -168,86 +169,119 @@ class _HomeState extends State<Home> {
                                               SizedBox(
                                                 height: 40,
                                               ),
-                                              Row(
-                                                children: [
-                                                  SizedBox(
-                                                    width:
-                                                        MediaQuery.of(context)
-                                                                .size
-                                                                .width *
-                                                            0.10,
-                                                  ),
-                                                  Container(
-                                                    height: 35,
-                                                    width: 85,
-                                                    decoration: BoxDecoration(
-                                                        shape:
-                                                            BoxShape.rectangle,
-                                                        borderRadius:
-                                                            BorderRadius.all(
-                                                          Radius.circular(5.0),
+                                              Provider.of<Data>(context)
+                                                      .matches[s]
+                                                      .dateTime
+                                                      .isAfter(DateTime.now())
+                                                  ? Row(
+                                                      children: [
+                                                        SizedBox(
+                                                          width: MediaQuery.of(
+                                                                      context)
+                                                                  .size
+                                                                  .width *
+                                                              0.10,
                                                         ),
-                                                        gradient:
-                                                            new LinearGradient(
-                                                                colors: [
-                                                              Color(0xff4758dd),
-                                                              Color(0xff814fed)
-                                                            ])),
-                                                    child: TextButton(
-                                                      onPressed: () {
-                                                        vote(context, 1, s);
-                                                      },
-                                                      child: Center(
-                                                        child: Text(
-                                                          '${Provider.of<Data>(context).matches[s].team1}',
-                                                          style: TextStyle(
-                                                            fontSize: 18,
-                                                            color: Colors.white,
+                                                        Container(
+                                                          height: 35,
+                                                          width: 85,
+                                                          decoration:
+                                                              BoxDecoration(
+                                                                  shape: BoxShape
+                                                                      .rectangle,
+                                                                  borderRadius:
+                                                                      BorderRadius
+                                                                          .all(
+                                                                    Radius
+                                                                        .circular(
+                                                                            5.0),
+                                                                  ),
+                                                                  gradient:
+                                                                      new LinearGradient(
+                                                                          colors: [
+                                                                        Color(
+                                                                            0xff4758dd),
+                                                                        Color(
+                                                                            0xff814fed)
+                                                                      ])),
+                                                          child: TextButton(
+                                                            onPressed: () {
+                                                              vote(context, 1,
+                                                                  s);
+                                                            },
+                                                            child: Center(
+                                                              child: Text(
+                                                                '${Provider.of<Data>(context).matches[s].team1}',
+                                                                style:
+                                                                    TextStyle(
+                                                                  fontSize: 18,
+                                                                  color: Colors
+                                                                      .white,
+                                                                ),
+                                                              ),
+                                                            ),
                                                           ),
                                                         ),
-                                                      ),
-                                                    ),
-                                                  ),
-                                                  SizedBox(
-                                                    width:
-                                                        MediaQuery.of(context)
-                                                                .size
-                                                                .width *
-                                                            0.30,
-                                                  ),
-                                                  Container(
-                                                    height: 35,
-                                                    width: 85,
-                                                    decoration: BoxDecoration(
-                                                        shape:
-                                                            BoxShape.rectangle,
-                                                        borderRadius:
-                                                            BorderRadius.all(
-                                                          Radius.circular(5.0),
+                                                        SizedBox(
+                                                          width: MediaQuery.of(
+                                                                      context)
+                                                                  .size
+                                                                  .width *
+                                                              0.30,
                                                         ),
-                                                        gradient:
-                                                            new LinearGradient(
-                                                                colors: [
-                                                              Color(0xff4758dd),
-                                                              Color(0xff814fed)
-                                                            ])),
-                                                    child: TextButton(
-                                                      onPressed: () {
-                                                        vote(context, 2, s);
-                                                      },
-                                                      child: Center(
-                                                        child: Text(
-                                                          '${Provider.of<Data>(context).matches[s].team2}',
-                                                          style: TextStyle(
-                                                            fontSize: 18,
-                                                            color: Colors.white,
+                                                        Container(
+                                                          height: 35,
+                                                          width: 85,
+                                                          decoration:
+                                                              BoxDecoration(
+                                                                  shape: BoxShape
+                                                                      .rectangle,
+                                                                  borderRadius:
+                                                                      BorderRadius
+                                                                          .all(
+                                                                    Radius
+                                                                        .circular(
+                                                                            5.0),
+                                                                  ),
+                                                                  gradient:
+                                                                      new LinearGradient(
+                                                                          colors: [
+                                                                        Color(
+                                                                            0xff4758dd),
+                                                                        Color(
+                                                                            0xff814fed)
+                                                                      ])),
+                                                          child: TextButton(
+                                                            onPressed: () {
+                                                              vote(context, 2,
+                                                                  s);
+                                                            },
+                                                            child: Center(
+                                                              child: Text(
+                                                                '${Provider.of<Data>(context).matches[s].team2}',
+                                                                style:
+                                                                    TextStyle(
+                                                                  fontSize: 18,
+                                                                  color: Colors
+                                                                      .white,
+                                                                ),
+                                                              ),
+                                                            ),
                                                           ),
                                                         ),
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
+                                                      ],
+                                                    )
+                                                  : Provider.of<Data>(context)
+                                                              .matches[s]
+                                                              .winner ==
+                                                          'NILL'
+                                                      ? Text(
+                                                          'Prediction Time Over!')
+                                                      : Text(Provider.of<Data>(
+                                                                  context)
+                                                              .matches[s]
+                                                              .winner +
+                                                          ' has won'),
                                             ],
                                           ),
                                         ),
