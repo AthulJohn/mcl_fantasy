@@ -3,7 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:mcl_fantasy/auth/firebase.dart';
 import 'package:mcl_fantasy/auth/sign.dart';
-import 'package:mcl_fantasy/Classes/dataClass.dart';
+import 'package:mcl_fantasy/classes/dataClass.dart';
 import 'package:provider/provider.dart';
 
 import 'home.dart';
@@ -14,30 +14,6 @@ class Signin extends StatefulWidget {
 }
 
 class _SigninState extends State<Signin> {
-  Future<void> getTeams(context) async {
-    int vote = 0;
-    QuerySnapshot quesnap =
-        await FirebaseFirestore.instance.collection('Fantasy Results').get();
-    DocumentSnapshot usersnap = await FirebaseFirestore.instance
-        .collection('Users')
-        .doc(Provider.of<Data>(context, listen: false).user.email)
-        .get();
-    for (QueryDocumentSnapshot snap in quesnap.docs) {
-      if (usersnap.exists) if (usersnap.data().keys.contains(snap.id))
-        vote = usersnap.data()[snap.id];
-      else
-        vote = 0;
-      Provider.of<Data>(context, listen: false).add(
-          snap.id,
-          Match(
-              team1: snap.data()['Team1'],
-              team2: snap.data()['Team2'],
-              dateTime: DateTime.tryParse(snap.data()['Date'].toString()),
-              winner: snap.data()['Winner'],
-              voted: vote));
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -95,9 +71,10 @@ class _SigninState extends State<Signin> {
                                                 'Please use your mace email id.')));
                                     AuthService().signOutGoogle(context);
                                   } else {
-                                    Provider.of<Data>(context, listen: false)
+                                    Provider.of<DataClass>(context,
+                                            listen: false)
                                         .updateuser(u);
-                                    await getTeams(context);
+                                    await FireBaseService().getTeams(context);
 
                                     if (u != null)
                                       Navigator.pushReplacement(context,

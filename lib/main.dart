@@ -1,9 +1,9 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:mcl_fantasy/classes/dataClass.dart';
 import 'package:mcl_fantasy/pages/home.dart';
 import 'package:mcl_fantasy/pages/signin.dart';
 import 'package:provider/provider.dart';
-import 'package:mcl_fantasy/Classes/dataClass.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -15,8 +15,8 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider<Data>(
-        create: (context) => Data(),
+    return ChangeNotifierProvider<DataClass>(
+        create: (context) => DataClass(),
         child: MaterialApp(
           title: 'MCL Fantasy',
           theme: ThemeData(

@@ -11,10 +11,14 @@ class Match {
     voted = vot;
   }
 
+  void winnerIs(String win) {
+    winner = win;
+  }
+
   Match({this.team1, this.team2, this.dateTime, this.winner, this.voted});
 }
 
-class Data extends ChangeNotifier {
+class DataClass extends ChangeNotifier {
   User user;
   Map<String, Match> matches = {};
   void add(String id, Match mat) {
@@ -23,6 +27,11 @@ class Data extends ChangeNotifier {
 
   void updateuser(User fuser) {
     user = fuser;
+    notifyListeners();
+  }
+
+  void updateWinner(String r, String s) {
+    matches[r].winnerIs(s);
     notifyListeners();
   }
 
