@@ -25,7 +25,6 @@ class FireBaseService {
         .collection('Users')
         .doc(Provider.of<DataClass>(context, listen: false).user.email)
         .get();
-    print(DateTime.now().toString());
     for (QueryDocumentSnapshot snap in quesnap.docs) {
       if (usersnap.exists) if (usersnap.data().keys.contains(snap.id))
         vote = usersnap.data()[snap.id];
@@ -38,7 +37,11 @@ class FireBaseService {
               team2: snap.data()['Team2'],
               dateTime: DateTime.tryParse(snap.data()['Date'].toString()) ??
                   DateTime.now(),
-              winner: snap.data()['Winner'],
+              winner: snap.data()['Winner'] == 0
+                  ? 'NILL'
+                  : snap.data()['Winner'] == 1
+                      ? snap.data()['Team1']
+                      : snap.data()['Team2'],
               voted: vote));
     }
   }
@@ -53,6 +56,19 @@ class FireBaseService {
       'user': Provider.of<DataClass>(context, listen: false).user.email,
       'time': DateTime.now().toString()
     });
+    DocumentSnapshot dsnap = await firestore
+        .collection('Fantasy Results')
+        .doc(id)
+        .collection(no == 1 ? 'Team 2' : 'Team 1')
+        .doc(Provider.of<DataClass>(context, listen: false).user.email)
+        .get();
+    if (dsnap.exists)
+      await firestore
+          .collection('Fantasy Results')
+          .doc(id)
+          .collection(no == 1 ? 'Team 2' : 'Team 1')
+          .doc(Provider.of<DataClass>(context, listen: false).user.email)
+          .delete();
     DocumentSnapshot snap = await firestore
         .collection('Users')
         .doc(Provider.of<DataClass>(context, listen: false).user.email)
@@ -76,5 +92,14 @@ class FireBaseService {
         .collection('Fantasy Results')
         .doc(s)
         .update({'Winner': val});
+  }
+
+  Future<void> addmatch(String key, Match mat) async {
+    await firestore.collection('Fantasy Results').doc(key).set({
+      'Team1': mat.team1,
+      'Team2': mat.team2,
+      'Winner': 0,
+      'Date': mat.dateTime.toIso8601String(),
+    });
   }
 }

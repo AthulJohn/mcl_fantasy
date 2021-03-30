@@ -47,7 +47,9 @@ class _HomeState extends State<Home> {
                                   child: Row(
                                     children: <Widget>[
                                       Image.network(
-                                        "https://hips.hearstapps.com/hmg-prod.s3.amazonaws.com/images/mh-12-30-tanner-3-1-1609368496.png",
+                                        teams[Provider.of<DataClass>(context)
+                                            .matches[s]
+                                            .team1]['logo'],
                                         fit: BoxFit.cover,
                                         width:
                                             MediaQuery.of(context).size.width /
@@ -57,7 +59,9 @@ class _HomeState extends State<Home> {
                                                 0.6666,
                                       ),
                                       Image.network(
-                                        "https://i0.wp.com/decider.com/wp-content/uploads/2019/04/tory-cobra-kai.jpg?quality=80&strip=all&ssl=1",
+                                        teams[Provider.of<DataClass>(context)
+                                            .matches[s]
+                                            .team2]['logo'],
                                         fit: BoxFit.cover,
                                         width:
                                             MediaQuery.of(context).size.width /
@@ -139,20 +143,24 @@ class _HomeState extends State<Home> {
                                                 fontWeight: FontWeight.w700,
                                               ),
                                             ),
-                                            Text(
-                                              Provider.of<DataClass>(context)
-                                                          .matches[s]
-                                                          .voted ==
-                                                      1
-                                                  ? 'Voted ${Provider.of<DataClass>(context).matches[s].team1}'
-                                                  : 'Voted ${Provider.of<DataClass>(context).matches[s].team2}',
-                                              style: TextStyle(
-                                                color: Colors.black87,
-                                                fontSize: 17,
-                                                fontFamily: "Monsterrat",
-                                                fontWeight: FontWeight.w700,
+                                            if (Provider.of<DataClass>(context)
+                                                    .matches[s]
+                                                    .voted !=
+                                                0)
+                                              Text(
+                                                Provider.of<DataClass>(context)
+                                                            .matches[s]
+                                                            .voted ==
+                                                        1
+                                                    ? 'Voted ${Provider.of<DataClass>(context).matches[s].team1}'
+                                                    : 'Voted ${Provider.of<DataClass>(context).matches[s].team2}',
+                                                style: TextStyle(
+                                                  color: Colors.black87,
+                                                  fontSize: 17,
+                                                  fontFamily: "Monsterrat",
+                                                  fontWeight: FontWeight.w700,
+                                                ),
                                               ),
-                                            ),
                                             SizedBox(
                                               height: 40,
                                             ),
