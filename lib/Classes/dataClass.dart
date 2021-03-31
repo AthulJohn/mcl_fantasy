@@ -23,9 +23,20 @@ class Match {
       this.voted = 0});
 }
 
+class UserStat {
+  String mail, name;
+  int won;
+  int min;
+
+  UserStat({this.mail, this.min, this.won, this.name});
+}
+
 class DataClass extends ChangeNotifier {
   User user;
   Map<String, Match> matches = {};
+
+  List<UserStat> leaderboard = [];
+
   void add(String id, Match mat) {
     matches[id] = mat;
   }
@@ -47,6 +58,23 @@ class DataClass extends ChangeNotifier {
   void vote(int vot, String id) {
     matches[id].vote(vot);
     notifyListeners();
+  }
+
+  void resetLeader() {
+    leaderboard = [];
+  }
+
+  void addLeader(UserStat userStat) {
+    leaderboard.add(userStat);
+  }
+
+  void sortLeaderBoard() {
+    leaderboard.sort((a, b) {
+      if (a.won == b.won)
+        return a.min.compareTo(b.min);
+      else
+        return b.won.compareTo(a.won);
+    });
   }
 }
 

@@ -6,17 +6,6 @@ import 'package:provider/provider.dart';
 class FireBaseService {
   FirebaseFirestore firestore = FirebaseFirestore.instance;
 
-  //funtion to change the format of date to DATEDDMMYYYY
-  // String dateFormat(DateTime dt) {
-  //   String st = 'DATE';
-  //   if (dt.day < 10) st += '0';
-  //   st += dt.day.toString();
-  //   if (dt.month < 10) st += '0';
-  //   st += dt.month.toString();
-  //   st += dt.year.toString();
-  //   return st;
-  // }
-
   Future<void> getTeams(context) async {
     int vote = 0;
     QuerySnapshot quesnap =
@@ -82,7 +71,12 @@ class FireBaseService {
       await firestore
           .collection('Users')
           .doc(Provider.of<DataClass>(context, listen: false).user.email)
-          .set({'won': 0, 'lost': 0, id: no});
+          .set({
+        'won': 0,
+        'lost': 0,
+        id: no,
+        'name': Provider.of<DataClass>(context, listen: false).user.displayName
+      });
 
     Provider.of<DataClass>(context, listen: false).vote(no, id);
   }
@@ -92,6 +86,24 @@ class FireBaseService {
         .collection('Fantasy Results')
         .doc(s)
         .update({'Winner': val});
+    if (val != 0) {
+      QuerySnapshot qs = await firestore
+          .collection('Fantasy Results')
+          .doc(s)
+          .collection(val == 1 ? 'Team 1' : 'Team 2')
+          .get();
+      for (QueryDocumentSnapshot qds in qs.docs) {
+        DocumentSnapshot ds =
+            await firestore.collection('Users').doc(qds.id).get();
+        if (ds.exists) {
+          int mins = DateTime.tryParse(qds.data()['time'])
+              .difference(DateTime(2021, 4))
+              .inMinutes;
+          await firestore.collection('Users').doc(qds.id).set(
+              {'won': ds.data()['won'] + 1, 'time': ds.data()['time'] + mins});
+        }
+      }
+    }
   }
 
   Future<void> addmatch(String key, Match mat) async {
@@ -101,5 +113,19 @@ class FireBaseService {
       'Winner': 0,
       'Date': mat.dateTime.toIso8601String(),
     });
+  }
+
+  Future<void> findLeaderBoard(context) async {
+    Provider.of<DataClass>(context, listen: false).resetLeader();
+    QuerySnapshot qs = await firestore.collection('Users').get();
+    for (QueryDocumentSnapshot qds in qs.docs) {
+      Provider.of<DataClass>(context, listen: false).addLeader(UserStat(
+          mail: qds.id,
+          won: qds.data()['won'] ?? 0,
+          min: qds.data()['time'] ?? 0,
+          name: qds.data()['name']));
+    }
+
+    Provider.of<DataClass>(context, listen: false).sortLeaderBoard();
   }
 }

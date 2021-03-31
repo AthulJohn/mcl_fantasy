@@ -2,6 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:mcl_fantasy/classes/dataClass.dart';
 import 'package:mcl_fantasy/pages/home.dart';
+import 'package:mcl_fantasy/pages/leaderboard.dart';
 import 'package:mcl_fantasy/pages/signin.dart';
 import 'package:provider/provider.dart';
 
@@ -31,12 +32,12 @@ class MyApp extends StatelessWidget {
             // is not restarted.
             primarySwatch: Colors.blue,
           ),
-          // routes: {
-          //   'signin': (context) => Signin(),
-          //   'home': (context) => Home()
-          // },
-          // initialRoute: 'signin',
-          home: Signin(),
+          routes: {
+            'signin': (context) => Signin(),
+            'home': (context) => Home(),
+            'leaderboard': (context) => LeaderBoard()
+          },
+          initialRoute: 'signin',
         ));
   }
 }
