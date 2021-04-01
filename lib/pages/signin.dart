@@ -75,11 +75,30 @@ class _SigninState extends State<Signin> {
                                             listen: false)
                                         .updateuser(u);
                                     await FireBaseService().getTeams(context);
-
+                                    int page = 1;
+                                    for (String s in Provider.of<DataClass>(
+                                            context,
+                                            listen: false)
+                                        .matches
+                                        .keys)
+                                      if (Provider.of<DataClass>(context,
+                                              listen: false)
+                                          .matches[s]
+                                          .dateTime
+                                          .isAfter(DateTime.now())) {
+                                        page = Provider.of<DataClass>(context,
+                                                    listen: false)
+                                                .matches
+                                                .keys
+                                                .toList()
+                                                .indexOf(s) +
+                                            1;
+                                        break;
+                                      }
                                     if (u != null)
                                       Navigator.pushReplacement(context,
                                           MaterialPageRoute(builder: (context) {
-                                        return Home();
+                                        return Home(page);
                                       }));
                                   }
                                 },

@@ -34,7 +34,7 @@ class MyApp extends StatelessWidget {
           ),
           routes: {
             'signin': (context) => Signin(),
-            'home': (context) => Home(),
+            'home': (context) => Home(0),
             'leaderboard': (context) => LeaderBoard()
           },
           initialRoute: 'signin',

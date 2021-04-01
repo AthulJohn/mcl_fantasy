@@ -8,13 +8,14 @@ import 'package:provider/provider.dart';
 import 'adminpanel.dart';
 
 class Home extends StatefulWidget {
+  final int page;
+  Home(this.page);
   @override
   _HomeState createState() => _HomeState();
 }
 
 class _HomeState extends State<Home> {
-  // Data data;
-
+  PageController pgc;
   List<String> admins = [
     'johnychackopulickal@gmail.com',
     'b19cs068@mace.ac.in',
@@ -24,14 +25,32 @@ class _HomeState extends State<Home> {
   FirebaseFirestore firestore = FirebaseFirestore.instance;
 
   @override
+  void initState() {
+    super.initState();
+    pgc = PageController(initialPage: widget.page);
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
         body: SafeArea(
           child: Provider.of<DataClass>(context) == null
-              ? Text('onnu wait cheyetto')
+              ? Center(
+                  child: Column(
+                    children: [
+                      CircularProgressIndicator(),
+                      Text('Please wait, while we fetch your data!')
+                    ],
+                  ),
+                )
               : Provider.of<DataClass>(context).matches.keys.length == 0
-                  ? Text('ivide onnum illa')
+                  ? Center(
+                      child: Column(
+                        children: [Text('Looks like there is nothing here!')],
+                      ),
+                    )
                   : PageView(
+                      controller: pgc,
                       children: [
                         if (admins.contains(
                             Provider.of<DataClass>(context).user.email))
@@ -112,19 +131,6 @@ class _HomeState extends State<Home> {
                                             ),
                                           ),
                                         ),
-                                        // Center(
-                                        //   child: Opacity(
-                                        //     opacity: 0.1,
-                                        //     child: Image.network(
-                                        //       "https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/605c07da-2ce9-49c5-b4a0-1baf94053177/d82lkbh-25611235-0068-40f6-a9e9-28b91c03539d.gif?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOiIsImlzcyI6InVybjphcHA6Iiwib2JqIjpbW3sicGF0aCI6IlwvZlwvNjA1YzA3ZGEtMmNlOS00OWM1LWI0YTAtMWJhZjk0MDUzMTc3XC9kODJsa2JoLTI1NjExMjM1LTAwNjgtNDBmNi1hOWU5LTI4YjkxYzAzNTM5ZC5naWYifV1dLCJhdWQiOlsidXJuOnNlcnZpY2U6ZmlsZS5kb3dubG9hZCJdfQ.Zw5LraFAep1gzjTjLHIYm7DSW5_41isoZnB8XwUtXlk",
-                                        //       height: MediaQuery.of(context)
-                                        //               .size
-                                        //               .height *
-                                        //           0.1,
-                                        //       fit: BoxFit.fill,
-                                        //     ),
-                                        //   ),
-                                        // ),
                                         Container(
                                           height: MediaQuery.of(context)
                                                   .size
@@ -178,106 +184,114 @@ class _HomeState extends State<Home> {
                                                       .matches[s]
                                                       .dateTime
                                                       .isAfter(DateTime.now())
-                                                  ? Row(
-                                                      children: [
-                                                        SizedBox(
-                                                          width: MediaQuery.of(
-                                                                      context)
-                                                                  .size
-                                                                  .width *
-                                                              0.10,
-                                                        ),
-                                                        Container(
-                                                          height: 35,
-                                                          width: 85,
-                                                          decoration:
-                                                              BoxDecoration(
-                                                                  shape: BoxShape
-                                                                      .rectangle,
-                                                                  borderRadius:
-                                                                      BorderRadius
-                                                                          .all(
-                                                                    Radius
-                                                                        .circular(
+                                                  ? Provider.of<DataClass>(context)
+                                                          .matches[s]
+                                                          .dateTime
+                                                          .isBefore(DateTime.now()
+                                                              .add(Duration(
+                                                                  days: 1)))
+                                                      ? Row(
+                                                          children: [
+                                                            SizedBox(
+                                                              width: MediaQuery.of(
+                                                                          context)
+                                                                      .size
+                                                                      .width *
+                                                                  0.10,
+                                                            ),
+                                                            Container(
+                                                              height: 35,
+                                                              width: 85,
+                                                              decoration:
+                                                                  BoxDecoration(
+                                                                      shape: BoxShape
+                                                                          .rectangle,
+                                                                      borderRadius:
+                                                                          BorderRadius
+                                                                              .all(
+                                                                        Radius.circular(
                                                                             5.0),
+                                                                      ),
+                                                                      gradient:
+                                                                          new LinearGradient(
+                                                                              colors: [
+                                                                            Color(0xff4758dd),
+                                                                            Color(0xff814fed)
+                                                                          ])),
+                                                              child: TextButton(
+                                                                onPressed: () {
+                                                                  FireBaseService()
+                                                                      .vote(
+                                                                          context,
+                                                                          1,
+                                                                          s);
+                                                                },
+                                                                child: Center(
+                                                                  child: Text(
+                                                                    '${Provider.of<DataClass>(context).matches[s].team1}',
+                                                                    style:
+                                                                        TextStyle(
+                                                                      fontSize:
+                                                                          18,
+                                                                      color: Colors
+                                                                          .white,
+                                                                    ),
                                                                   ),
-                                                                  gradient:
-                                                                      new LinearGradient(
-                                                                          colors: [
-                                                                        Color(
-                                                                            0xff4758dd),
-                                                                        Color(
-                                                                            0xff814fed)
-                                                                      ])),
-                                                          child: TextButton(
-                                                            onPressed: () {
-                                                              FireBaseService()
-                                                                  .vote(context,
-                                                                      1, s);
-                                                            },
-                                                            child: Center(
-                                                              child: Text(
-                                                                '${Provider.of<DataClass>(context).matches[s].team1}',
-                                                                style:
-                                                                    TextStyle(
-                                                                  fontSize: 18,
-                                                                  color: Colors
-                                                                      .white,
                                                                 ),
                                                               ),
                                                             ),
-                                                          ),
-                                                        ),
-                                                        SizedBox(
-                                                          width: MediaQuery.of(
-                                                                      context)
-                                                                  .size
-                                                                  .width *
-                                                              0.30,
-                                                        ),
-                                                        Container(
-                                                          height: 35,
-                                                          width: 85,
-                                                          decoration:
-                                                              BoxDecoration(
-                                                                  shape: BoxShape
-                                                                      .rectangle,
-                                                                  borderRadius:
-                                                                      BorderRadius
-                                                                          .all(
-                                                                    Radius
-                                                                        .circular(
+                                                            SizedBox(
+                                                              width: MediaQuery.of(
+                                                                          context)
+                                                                      .size
+                                                                      .width *
+                                                                  0.30,
+                                                            ),
+                                                            Container(
+                                                              height: 35,
+                                                              width: 85,
+                                                              decoration:
+                                                                  BoxDecoration(
+                                                                      shape: BoxShape
+                                                                          .rectangle,
+                                                                      borderRadius:
+                                                                          BorderRadius
+                                                                              .all(
+                                                                        Radius.circular(
                                                                             5.0),
+                                                                      ),
+                                                                      gradient:
+                                                                          new LinearGradient(
+                                                                              colors: [
+                                                                            Color(0xff4758dd),
+                                                                            Color(0xff814fed)
+                                                                          ])),
+                                                              child: TextButton(
+                                                                onPressed: () {
+                                                                  FireBaseService()
+                                                                      .vote(
+                                                                          context,
+                                                                          2,
+                                                                          s);
+                                                                },
+                                                                child: Center(
+                                                                  child: Text(
+                                                                    '${Provider.of<DataClass>(context).matches[s].team2}',
+                                                                    style:
+                                                                        TextStyle(
+                                                                      fontSize:
+                                                                          18,
+                                                                      color: Colors
+                                                                          .white,
+                                                                    ),
                                                                   ),
-                                                                  gradient:
-                                                                      new LinearGradient(
-                                                                          colors: [
-                                                                        Color(
-                                                                            0xff4758dd),
-                                                                        Color(
-                                                                            0xff814fed)
-                                                                      ])),
-                                                          child: TextButton(
-                                                            onPressed: () {
-                                                              FireBaseService()
-                                                                  .vote(context,
-                                                                      2, s);
-                                                            },
-                                                            child: Center(
-                                                              child: Text(
-                                                                '${Provider.of<DataClass>(context).matches[s].team2}',
-                                                                style:
-                                                                    TextStyle(
-                                                                  fontSize: 18,
-                                                                  color: Colors
-                                                                      .white,
                                                                 ),
                                                               ),
                                                             ),
-                                                          ),
-                                                        ),
-                                                      ],
-                                                    )
+                                                          ],
+                                                        )
+                                                      : Text(
+                                                          'Prediction not yet started!!')
                                                   : Provider.of<DataClass>(
                                                                   context)
                                                               .matches[s]
@@ -308,8 +322,8 @@ class _HomeState extends State<Home> {
           child: Icon(
             Icons.leaderboard,
           ),
-          onPressed: ()async {
-           await FireBaseService().findLeaderBoard(context);
+          onPressed: () async {
+            await FireBaseService().findLeaderBoard(context);
             Navigator.pushNamed(context, 'leaderboard');
           },
         ));
