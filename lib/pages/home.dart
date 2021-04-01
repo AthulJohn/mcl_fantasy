@@ -57,140 +57,181 @@ class _HomeState extends State<Home> {
                           AdminPanel(),
                         for (String s
                             in Provider.of<DataClass>(context).matches.keys)
-                          Column(
-                            children: [
-                              Stack(
-                                children: <Widget>[
-                                  Container(
-                                    width: MediaQuery.of(context).size.width,
-                                    child: Row(
-                                      children: <Widget>[
-                                        Image.network(
-                                          teams[Provider.of<DataClass>(context)
-                                              .matches[s]
-                                              .team1]['logo'],
-                                          fit: BoxFit.cover,
-                                          width: MediaQuery.of(context)
-                                                  .size
-                                                  .width /
-                                              2,
-                                          height: MediaQuery.of(context)
-                                                  .size
-                                                  .height *
-                                              0.6666,
+                          Card(
+                            elevation: 10,
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8)),
+                            margin: EdgeInsets.all(12),
+                            child: Column(
+                              children: [
+                                Expanded(
+                                  child: Stack(
+                                    children: <Widget>[
+                                      Container(
+                                        // width: MediaQuery.of(context).size.width,
+                                        decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(14),
+                                            gradient: LinearGradient(colors: [
+                                              teams[Provider.of<DataClass>(
+                                                      context)
+                                                  .matches[s]
+                                                  .team1]['color'],
+                                              teams[Provider.of<DataClass>(
+                                                      context)
+                                                  .matches[s]
+                                                  .team2]['color']
+                                            ])),
+                                        child: Row(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.stretch,
+                                          children: <Widget>[
+                                            Expanded(
+                                              child: Image.network(
+                                                teams[Provider.of<DataClass>(
+                                                        context)
+                                                    .matches[s]
+                                                    .team1]['logo'],
+                                                fit: BoxFit.contain,
+                                              ),
+                                            ),
+                                            Expanded(
+                                              child: Image.network(
+                                                teams[Provider.of<DataClass>(
+                                                        context)
+                                                    .matches[s]
+                                                    .team2]['logo'],
+                                                fit: BoxFit.contain,
+                                              ),
+                                            ),
+                                          ],
                                         ),
-                                        Image.network(
-                                          teams[Provider.of<DataClass>(context)
-                                              .matches[s]
-                                              .team2]['logo'],
-                                          fit: BoxFit.cover,
-                                          width: MediaQuery.of(context)
-                                                  .size
-                                                  .width /
-                                              2,
-                                          height: MediaQuery.of(context)
-                                                  .size
-                                                  .height *
-                                              0.6666,
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  Center(
-                                    child: Image.network(
-                                      "https://www.freepngimg.com/thumb/orange/85889-thunder-text-triangle-lightning-png-image-high-quality.png", //thunder image mattanam ithu match illa
+                                      ),
+                                      Center(
+                                        child: Image.network(
+                                          "https://www.freepngimg.com/thumb/orange/85889-thunder-text-triangle-lightning-png-image-high-quality.png", //thunder image mattanam ithu match illa
 
+                                          height: MediaQuery.of(context)
+                                                  .size
+                                                  .height *
+                                              0.66,
+                                          width: MediaQuery.of(context)
+                                                  .size
+                                                  .width *
+                                              0.2,
+                                          fit: BoxFit.fill,
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                ),
+                                Stack(
+                                  children: [
+                                    Center(
+                                      child: Opacity(
+                                        opacity: 0.2,
+                                        child: Image.network(
+                                          "https://drive.google.com/uc?export=view&id=1WSDax83g2k3PC_R3-XU_YriW1F2Ulos3",
+                                          fit: BoxFit.contain,
+                                          height: MediaQuery.of(context)
+                                                  .size
+                                                  .height *
+                                              0.15,
+                                        ),
+                                      ),
+                                    ),
+                                    Container(
                                       height:
                                           MediaQuery.of(context).size.height *
-                                              0.66,
-                                      width: MediaQuery.of(context).size.width *
-                                          0.2,
-                                      fit: BoxFit.fill,
-                                    ),
-                                  )
-                                ],
-                              ),
-                              Stack(
-                                children: <Widget>[
-                                  Card(
-                                    borderOnForeground: false,
-                                    elevation: 5.0,
-                                    semanticContainer: false,
-                                    child: Stack(
-                                      children: [
-                                        Center(
-                                          child: Opacity(
-                                            opacity: 0.2,
-                                            child: Image.network(
-                                              "https://drive.google.com/uc?export=view&id=1WSDax83g2k3PC_R3-XU_YriW1F2Ulos3",
-                                              fit: BoxFit.contain,
-                                              height: MediaQuery.of(context)
-                                                      .size
-                                                      .height *
-                                                  0.15,
-                                            ),
-                                          ),
-                                        ),
-                                        Container(
-                                          height: MediaQuery.of(context)
-                                                  .size
-                                                  .height *
                                               0.28,
-                                          decoration: BoxDecoration(
-                                            gradient: new LinearGradient(
-                                              colors: [
-                                                Color(0x319fa4c4),
-                                                Color(0x41b3cdd1)
-                                              ],
-                                            ),
-                                          ),
-                                          child: Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.stretch,
+                                      child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceEvenly,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.stretch,
+                                        children: [
+                                          Row(
                                             children: [
-                                              Text(
-                                                '${Provider.of<DataClass>(context).matches[s].team1} vs ${Provider.of<DataClass>(context).matches[s].team2}',
-                                                style: TextStyle(
-                                                  color: Colors.black87,
-                                                  fontSize: 24,
-                                                  fontFamily: "Monsterrat",
-                                                  fontWeight: FontWeight.w700,
-                                                ),
-                                              ),
-                                              if (Provider.of<DataClass>(
-                                                          context)
-                                                      .matches[s]
-                                                      .voted !=
-                                                  0)
-                                                Text(
-                                                  Provider.of<DataClass>(
-                                                                  context)
-                                                              .matches[s]
-                                                              .voted ==
-                                                          1
-                                                      ? 'Voted ${Provider.of<DataClass>(context).matches[s].team1}'
-                                                      : 'Voted ${Provider.of<DataClass>(context).matches[s].team2}',
+                                              Expanded(
+                                                flex: 2,
+                                                child: Text(
+                                                  '${teams[Provider.of<DataClass>(context).matches[s].team1]['name']}',
+                                                  textAlign: TextAlign.center,
                                                   style: TextStyle(
                                                     color: Colors.black87,
-                                                    fontSize: 17,
+                                                    fontSize: 22,
                                                     fontFamily: "Monsterrat",
                                                     fontWeight: FontWeight.w700,
                                                   ),
                                                 ),
-                                              SizedBox(
-                                                height: 40,
                                               ),
-                                              Provider.of<DataClass>(context)
+                                              Expanded(
+                                                child: Text(
+                                                  'vs',
+                                                  textAlign: TextAlign.center,
+                                                  style: TextStyle(
+                                                    color: Colors.black87,
+                                                    fontSize: 22,
+                                                    fontFamily: "Monsterrat",
+                                                    fontWeight: FontWeight.w700,
+                                                  ),
+                                                ),
+                                              ),
+                                              Expanded(
+                                                flex: 2,
+                                                child: Text(
+                                                  '${teams[Provider.of<DataClass>(context).matches[s].team2]['name']}',
+                                                  textAlign: TextAlign.center,
+                                                  style: TextStyle(
+                                                    color: Colors.black87,
+                                                    fontSize: 22,
+                                                    fontFamily: "Monsterrat",
+                                                    fontWeight: FontWeight.w700,
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                          SizedBox(
+                                            height: 40,
+                                          ),
+                                          Provider.of<DataClass>(context)
+                                                  .matches[s]
+                                                  .dateTime
+                                                  .isAfter(DateTime.now())
+                                              ? Provider.of<DataClass>(context)
                                                       .matches[s]
                                                       .dateTime
-                                                      .isAfter(DateTime.now())
-                                                  ? Provider.of<DataClass>(context)
-                                                          .matches[s]
-                                                          .dateTime
-                                                          .isBefore(DateTime.now()
-                                                              .add(Duration(
-                                                                  days: 1)))
-                                                      ? Row(
+                                                      .isBefore(DateTime.now().add(
+                                                          Duration(days: 1)))
+                                                  ? Provider.of<DataClass>(
+                                                                  context)
+                                                              .matches[s]
+                                                              .voted !=
+                                                          0
+                                                      ? Center(
+                                                          child: Text(
+                                                            Provider.of<DataClass>(
+                                                                            context)
+                                                                        .matches[
+                                                                            s]
+                                                                        .voted ==
+                                                                    1
+                                                                ? 'Voted ${Provider.of<DataClass>(context).matches[s].team1}'
+                                                                : 'Voted ${Provider.of<DataClass>(context).matches[s].team2}',
+                                                            style: TextStyle(
+                                                              color: Colors
+                                                                  .black87,
+                                                              fontSize: 17,
+                                                              fontFamily:
+                                                                  "Monsterrat",
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w700,
+                                                            ),
+                                                          ),
+                                                        )
+                                                      : Row(
                                                           children: [
                                                             SizedBox(
                                                               width: MediaQuery.of(
@@ -290,30 +331,28 @@ class _HomeState extends State<Home> {
                                                             ),
                                                           ],
                                                         )
-                                                      : Text(
-                                                          'Prediction not yet started!!')
-                                                  : Provider.of<DataClass>(
-                                                                  context)
-                                                              .matches[s]
-                                                              .winner ==
-                                                          'NILL'
-                                                      ? Text(
-                                                          'Prediction Time Over!')
-                                                      : Text(
-                                                          Provider.of<DataClass>(
-                                                                      context)
-                                                                  .matches[s]
-                                                                  .winner +
-                                                              ' has won'),
-                                            ],
-                                          ),
-                                        ),
-                                      ],
+                                                  : Center(
+                                                      child: Text(
+                                                          'Prediction not yet started!!'),
+                                                    )
+                                              : Provider.of<DataClass>(context)
+                                                          .matches[s]
+                                                          .winner ==
+                                                      'NILL'
+                                                  ? Text(
+                                                      'Prediction Time Over!')
+                                                  : Text(Provider.of<DataClass>(
+                                                              context)
+                                                          .matches[s]
+                                                          .winner +
+                                                      ' has won'),
+                                        ],
+                                      ),
                                     ),
-                                  ),
-                                ],
-                              )
-                            ],
+                                  ],
+                                )
+                              ],
+                            ),
                           )
                       ],
                     ),

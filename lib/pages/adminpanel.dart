@@ -15,13 +15,29 @@ class _AdminPanelState extends State<AdminPanel> {
     return Consumer<DataClass>(
       builder: (context, data, child) => ListView(
         children: [
+          Container(
+            height: 50,
+            child: Center(
+              child: Text(
+                'Admin Page',
+                style: TextStyle(
+                  color: Colors.black87,
+                  fontSize: 25,
+                  fontFamily: "Monsterrat",
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+            ),
+          ),
           for (String s in data.matches.keys)
             Card(
+              margin: EdgeInsets.all(10),
+              elevation: 5,
               child: Column(
                 children: [
                   Text(data.matches[s].team1 + ' vs ' + data.matches[s].team2),
                   Text(
-                      '${data.matches[s].dateTime.day}/${data.matches[s].dateTime.month}'),
+                      'Date: ${data.matches[s].dateTime.day}/${data.matches[s].dateTime.month}/${data.matches[s].dateTime.year}'),
                   Text('Winner: '),
                   ListTile(
                     onTap: () {
@@ -58,15 +74,21 @@ class _AdminPanelState extends State<AdminPanel> {
                 ],
               ),
             ),
-          IconButton(
-            icon: Icon(Icons.add_circle),
-            onPressed: () {
-              showDialog(
-                  context: context,
-                  builder: (context) {
-                    return AddDialog();
-                  });
-            },
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: IconButton(
+              icon: Icon(
+                Icons.add_circle,
+                size: 40,
+              ),
+              onPressed: () {
+                showDialog(
+                    context: context,
+                    builder: (context) {
+                      return AddDialog();
+                    });
+              },
+            ),
           )
         ],
       ),

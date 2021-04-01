@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 
 class Match {
@@ -82,71 +83,85 @@ Map teams = {
   'IDK': {
     'name': 'Idukki Gladiators',
     'logo':
-        'https://drive.google.com/uc?export=view&id=1vEVVbNKwI4jDP5GDchmpG8cmbuEmDjFL'
+        'https://drive.google.com/uc?export=view&id=1vEVVbNKwI4jDP5GDchmpG8cmbuEmDjFL',
+    'color': Color.fromRGBO(55, 55, 55, 1)
   },
   'ALP': {
     'name': 'Decoders Alleyppey',
     'logo':
-        'https://drive.google.com/uc?export=view&id=12dZyT3gki2jfB5LxVgBV8yuw-MbVfAUf'
+        'https://drive.google.com/uc?export=view&id=12dZyT3gki2jfB5LxVgBV8yuw-MbVfAUf',
+    'color': Color.fromRGBO(1, 122, 141, 1)
   },
   'TRV': {
     'name': 'Trivandrum Dragons',
     'logo':
-        'https://drive.google.com/uc?export=view&id=1aZevJZjA6Vpf4sFc6xXH9URuDFsMmvp9'
+        'https://drive.google.com/uc?export=view&id=1aZevJZjA6Vpf4sFc6xXH9URuDFsMmvp9',
+    'color': Color.fromRGBO(150, 44, 54, 1)
   },
   'CLT': {
     'name': 'Calicut Cavaliers',
     'logo':
-        'https://drive.google.com/uc?export=view&id=19qduGu1PuHoAKvi1L7jRYWSItJtjpnZc'
+        'https://drive.google.com/uc?export=view&id=19qduGu1PuHoAKvi1L7jRYWSItJtjpnZc',
+    'color': Color.fromRGBO(30, 27, 22, 1)
   },
   'KNR': {
     'name': 'Kannur Knights',
     'logo':
-        'https://drive.google.com/uc?export=view&id=17nFt6XpWFASghEVB_fIhL23QpGjydUMN'
+        'https://drive.google.com/uc?export=view&id=17nFt6XpWFASghEVB_fIhL23QpGjydUMN',
+    'color': Color.fromRGBO(170, 15, 21, 1)
   },
   'PLK': {
     'name': 'Palakkad Warriors',
     'logo':
-        'https://drive.google.com/uc?export=view&id=1Onjac15ODg6LyE1WqB5j7QphuR6Cp98Y'
+        'https://drive.google.com/uc?export=view&id=1Onjac15ODg6LyE1WqB5j7QphuR6Cp98Y',
+    'color': Color.fromRGBO(114, 3, 10, 1)
   },
   'EKM': {
     'name': 'King Coders EKM',
     'logo':
-        'https://drive.google.com/uc?export=view&id=1AvzP18MMlurhZ0SapPUu1D37rhRnT1CL'
+        'https://drive.google.com/uc?export=view&id=1AvzP18MMlurhZ0SapPUu1D37rhRnT1CL',
+    'color': Color.fromRGBO(66, 96, 160, 1)
   },
   'KZD': {
     'name': 'Kasargod DigitHeads',
     'logo':
-        'https://drive.google.com/uc?export=view&id=1EmUBlAm5oeWDc18PlP1WkQpCU2Qr4fQK'
+        'https://drive.google.com/uc?export=view&id=1EmUBlAm5oeWDc18PlP1WkQpCU2Qr4fQK',
+    'color': Color.fromRGBO(55, 123, 136, 1)
   },
   'KTM': {
     'name': 'Kottayam Koders',
     'logo':
-        'https://drive.google.com/uc?export=view&id=1xfEU6jawFRCuHWYEtkWSSmKdiLiFBvEA'
+        'https://drive.google.com/uc?export=view&id=1xfEU6jawFRCuHWYEtkWSSmKdiLiFBvEA',
+    'color': Color.fromRGBO(80, 67, 5, 1)
   },
   'KLM': {
     'name': 'Cyber Falcons Kollam',
     'logo':
-        'https://drive.google.com/uc?export=view&id=1B10MJNjv6oh2C8puibb-onCZPbq_ePWy'
+        'https://drive.google.com/uc?export=view&id=1B10MJNjv6oh2C8puibb-onCZPbq_ePWy',
+    'color': Color.fromRGBO(169, 60, 4, 1)
   },
   'MLP': {
     'name': 'Malappuram Mavericks',
     'logo':
-        'https://drive.google.com/uc?export=view&id=1sgWYNNHjvLsdC6og-A71f0STfAup1hjl'
+        'https://drive.google.com/uc?export=view&id=1sgWYNNHjvLsdC6og-A71f0STfAup1hjl',
+    'color': Color.fromRGBO(33, 62, 102, 1)
   },
   'PTM': {
     'name': 'Royal Pythons Pathanamthitta',
     'logo':
-        'https://drive.google.com/uc?export=view&id=1BuNbli8rJ3u46wc03zUZo6CNHUYbGiXC'
+        'https://drive.google.com/uc?export=view&id=1BuNbli8rJ3u46wc03zUZo6CNHUYbGiXC',
+    'color': Color.fromRGBO(96, 15, 135, 1)
   },
   'TRS': {
     'name': 'Thrissur Raptors',
     'logo':
-        'https://drive.google.com/uc?export=view&id=1vsL-A2-64QYMj49qzxWfDQDwAfDQmMKL'
+        'https://drive.google.com/uc?export=view&id=1vsL-A2-64QYMj49qzxWfDQDwAfDQmMKL',
+    'color': Color.fromRGBO(29, 40, 102, 1)
   },
   'WYD': {
     'name': 'Wayanad Blackhats',
     'logo':
-        'https://drive.google.com/uc?export=view&id=1C9K-GILQ7Bk3-fiOqy40gku7nRZO45uS'
+        'https://drive.google.com/uc?export=view&id=1C9K-GILQ7Bk3-fiOqy40gku7nRZO45uS',
+    'color': Color.fromRGBO(1, 0, 2, 1)
   },
 };
