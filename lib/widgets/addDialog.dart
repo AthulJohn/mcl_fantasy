@@ -157,7 +157,7 @@ class _AddDialogState extends State<AddDialog> {
         TextButton(
           child: Text('Submit'),
           onPressed: () async {
-            dat.add(Duration(hours: convert(), minutes: tm));
+            dat = dat.add(Duration(hours: convert(), minutes: tm));
             Provider.of<DataClass>(context, listen: false).add(
                 'Match $newnumber',
                 Match(team1: team1, team2: team2, dateTime: dat));

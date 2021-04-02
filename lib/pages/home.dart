@@ -22,6 +22,42 @@ class _HomeState extends State<Home> {
     'codechef@mace.ac.in'
   ];
 
+  String dateFormat(DateTime dt) {
+    List months = [
+      'January',
+      'February',
+      'March',
+      'April',
+      'May',
+      'June',
+      'July',
+      'August',
+      'September',
+      'October',
+      'November',
+      'December'
+    ];
+    return '${dt.day} ${months[dt.month - 1]} ${dt.year}';
+  }
+
+  String timeFormat(DateTime dt) {
+    String ampm;
+    int hr = dt.hour;
+    if (dt.hour < 12) {
+      ampm = 'AM';
+    } else {
+      hr = dt.hour - 12;
+      ampm = 'PM';
+    }
+    if (hr == 0) hr = 12;
+    String toreturn = '';
+    if (hr < 10) toreturn += '0';
+    toreturn += '$hr:';
+    if (dt.minute < 9) toreturn += '0';
+    toreturn += '${dt.minute} $ampm';
+    return toreturn;
+  }
+
   FirebaseFirestore firestore = FirebaseFirestore.instance;
 
   @override
@@ -65,28 +101,37 @@ class _HomeState extends State<Home> {
                             child: Column(
                               children: [
                                 Expanded(
-                                  child: Stack(
-                                    children: <Widget>[
-                                      Container(
-                                        // width: MediaQuery.of(context).size.width,
-                                        decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(14),
-                                            gradient: LinearGradient(colors: [
-                                              teams[Provider.of<DataClass>(
-                                                      context)
-                                                  .matches[s]
-                                                  .team1]['color'],
-                                              teams[Provider.of<DataClass>(
-                                                      context)
-                                                  .matches[s]
-                                                  .team2]['color']
-                                            ])),
-                                        child: Row(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.stretch,
+                                  child: Container(
+                                    // width: MediaQuery.of(context).size.width,
+                                    decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(14),
+                                        gradient: LinearGradient(colors: [
+                                          teams[Provider.of<DataClass>(context)
+                                              .matches[s]
+                                              .team1]['color'],
+                                          teams[Provider.of<DataClass>(context)
+                                              .matches[s]
+                                              .team2]['color']
+                                        ])),
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceEvenly,
+                                      children: [
+                                        Text(
+                                          s,
+                                          style: TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 22,
+                                            fontFamily: "Monsterrat",
+                                            fontWeight: FontWeight.w700,
+                                          ),
+                                        ),
+                                        Row(
+                                          // crossAxisAlignment:
+                                          //     CrossAxisAlignment.stretch,
                                           children: <Widget>[
                                             Expanded(
+                                              flex: 4,
                                               child: Image.network(
                                                 teams[Provider.of<DataClass>(
                                                         context)
@@ -97,6 +142,13 @@ class _HomeState extends State<Home> {
                                             ),
                                             Expanded(
                                               child: Image.network(
+                                                'https://comicvine1.cbsistatic.com/uploads/original/11141/111417311/7460362-versus-letters-vs-logo-vector-13673484.png',
+                                                fit: BoxFit.contain,
+                                              ),
+                                            ),
+                                            Expanded(
+                                              flex: 4,
+                                              child: Image.network(
                                                 teams[Provider.of<DataClass>(
                                                         context)
                                                     .matches[s]
@@ -106,24 +158,61 @@ class _HomeState extends State<Home> {
                                             ),
                                           ],
                                         ),
-                                      ),
-                                      Center(
-                                        child: Image.network(
-                                          "https://www.freepngimg.com/thumb/orange/85889-thunder-text-triangle-lightning-png-image-high-quality.png", //thunder image mattanam ithu match illa
-
-                                          height: MediaQuery.of(context)
-                                                  .size
-                                                  .height *
-                                              0.66,
-                                          width: MediaQuery.of(context)
-                                                  .size
-                                                  .width *
-                                              0.2,
-                                          fit: BoxFit.fill,
+                                        Column(
+                                          children: [
+                                            Text(
+                                              dateFormat(Provider.of<DataClass>(
+                                                      context)
+                                                  .matches[s]
+                                                  .dateTime),
+                                              style: TextStyle(
+                                                color: Colors.white,
+                                                fontSize: 22,
+                                                fontFamily: "Monsterrat",
+                                                fontWeight: FontWeight.w700,
+                                              ),
+                                            ),
+                                            Text(
+                                              timeFormat(Provider.of<DataClass>(
+                                                      context)
+                                                  .matches[s]
+                                                  .dateTime),
+                                              style: TextStyle(
+                                                color: Colors.white,
+                                                fontSize: 22,
+                                                fontFamily: "Monsterrat",
+                                                fontWeight: FontWeight.w700,
+                                              ),
+                                            )
+                                          ],
                                         ),
-                                      )
-                                    ],
+                                      ],
+                                    ),
                                   ),
+
+                                  // Center(
+                                  //     child: Container(
+                                  //   child: Column(
+                                  //     mainAxisAlignment:
+                                  //         MainAxisAlignment.spaceAround,
+                                  //     children: [],
+                                  //   ),
+                                  // ))
+                                  // Center(
+                                  //   child: Image.network(
+                                  //     "https://www.freepngimg.com/thumb/orange/85889-thunder-text-triangle-lightning-png-image-high-quality.png", //thunder image mattanam ithu match illa
+
+                                  //     height: MediaQuery.of(context)
+                                  //             .size
+                                  //             .height *
+                                  //         0.66,
+                                  //     width: MediaQuery.of(context)
+                                  //             .size
+                                  //             .width *
+                                  //         0.2,
+                                  //     fit: BoxFit.fill,
+                                  //   ),
+                                  // )
                                 ),
                                 Stack(
                                   children: [
@@ -163,6 +252,9 @@ class _HomeState extends State<Home> {
                                                     fontFamily: "Monsterrat",
                                                     fontWeight: FontWeight.w700,
                                                   ),
+                                                  maxLines: 2,
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
                                                 ),
                                               ),
                                               Expanded(
@@ -202,8 +294,9 @@ class _HomeState extends State<Home> {
                                               ? Provider.of<DataClass>(context)
                                                       .matches[s]
                                                       .dateTime
-                                                      .isBefore(DateTime.now().add(
-                                                          Duration(days: 1)))
+                                                      .isBefore(DateTime.now()
+                                                          .add(Duration(
+                                                              days: 1)))
                                                   ? Provider.of<DataClass>(
                                                                   context)
                                                               .matches[s]
@@ -339,13 +432,18 @@ class _HomeState extends State<Home> {
                                                           .matches[s]
                                                           .winner ==
                                                       'NILL'
-                                                  ? Text(
-                                                      'Prediction Time Over!')
-                                                  : Text(Provider.of<DataClass>(
-                                                              context)
-                                                          .matches[s]
-                                                          .winner +
-                                                      ' has won'),
+                                                  ? Center(
+                                                      child: Text(
+                                                          'Prediction Time Over!'),
+                                                    )
+                                                  : Center(
+                                                      child: Text(
+                                                          Provider.of<DataClass>(
+                                                                      context)
+                                                                  .matches[s]
+                                                                  .winner +
+                                                              ' has won'),
+                                                    ),
                                         ],
                                       ),
                                     ),
