@@ -8,6 +8,7 @@ class LeaderBoard extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text('LeaderBoard'),
+        backgroundColor: Colors.black,
       ),
       body: SafeArea(
         child: Column(
