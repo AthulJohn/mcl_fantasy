@@ -7,7 +7,7 @@ class FireBaseService {
   FirebaseFirestore firestore = FirebaseFirestore.instance;
 
   Future<void> getTeams(context) async {
-    int vote = 0;
+    String vote = 'NILL';
     QuerySnapshot quesnap =
         await FirebaseFirestore.instance.collection('Fantasy Results').get();
     DocumentSnapshot usersnap = await FirebaseFirestore.instance
@@ -18,7 +18,7 @@ class FireBaseService {
       if (usersnap.exists) if (usersnap.data().keys.contains(snap.id))
         vote = usersnap.data()[snap.id];
       else
-        vote = 0;
+        vote = 'NILL';
       Provider.of<DataClass>(context, listen: false).add(
           snap.id,
           Match(
@@ -33,9 +33,27 @@ class FireBaseService {
                       : snap.data()['Team2'],
               voted: vote));
     }
+    if (usersnap.exists) {
+      Provider.of<DataClass>(context, listen: false).updateuserstat(UserStat(
+          name: usersnap.data()['name'] ??
+              Provider.of<DataClass>(context, listen: false).user.displayName,
+          mail: usersnap.id,
+          won: usersnap.data()['won'] ?? 0,
+          min: usersnap.data()['time'] ?? 0,
+          image: usersnap.data()['image'] ??
+              'https://www.winhelponline.com/blog/wp-content/uploads/2017/12/user.png'));
+    } else {
+      Provider.of<DataClass>(context, listen: false).updateuserstat(UserStat(
+          name: Provider.of<DataClass>(context, listen: false).user.displayName,
+          mail: Provider.of<DataClass>(context, listen: false).user.email,
+          won: 0,
+          min: 0,
+          image:
+              'https://www.winhelponline.com/blog/wp-content/uploads/2017/12/user.png'));
+    }
   }
 
-  Future<void> vote(context, int no, String id) async {
+  Future<void> vote(context, int no, String team, String id) async {
     await firestore
         .collection('Fantasy Results')
         .doc(id)
@@ -66,7 +84,7 @@ class FireBaseService {
       await firestore
           .collection('Users')
           .doc(Provider.of<DataClass>(context, listen: false).user.email)
-          .update({id: no});
+          .update({id: team});
     } else
       await firestore
           .collection('Users')
@@ -74,11 +92,12 @@ class FireBaseService {
           .set({
         'won': 0,
         'lost': 0,
-        id: no,
-        'name': Provider.of<DataClass>(context, listen: false).user.displayName
+        id: team,
+        'name': Provider.of<DataClass>(context, listen: false).user.displayName,
+        'image': Provider.of<DataClass>(context, listen: false).user.photoURL
       });
 
-    Provider.of<DataClass>(context, listen: false).vote(no, id);
+    Provider.of<DataClass>(context, listen: false).vote(team, id);
   }
 
   void updatewinner(String s, int val) async {
@@ -99,7 +118,7 @@ class FireBaseService {
           int mins = DateTime.tryParse(qds.data()['time'])
               .difference(DateTime(2021, 4))
               .inMinutes;
-          await firestore.collection('Users').doc(qds.id).set(
+          await firestore.collection('Users').doc(qds.id).update(
               {'won': ds.data()['won'] + 1, 'time': ds.data()['time'] + mins});
         }
       }
@@ -123,7 +142,9 @@ class FireBaseService {
           mail: qds.id,
           won: qds.data()['won'] ?? 0,
           min: qds.data()['time'] ?? 0,
-          name: qds.data()['name']));
+          name: qds.data()['name'],
+          image: qds.data()['image'] ??
+              'https://www.winhelponline.com/blog/wp-content/uploads/2017/12/user.png'));
     }
 
     Provider.of<DataClass>(context, listen: false).sortLeaderBoard();

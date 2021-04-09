@@ -7,8 +7,8 @@ class Match {
   String team1;
   String team2;
   String winner = "NILL";
-  int voted = 0;
-  void vote(int vot) {
+  String voted = "NILL";
+  void vote(String vot) {
     voted = vot;
   }
 
@@ -21,21 +21,21 @@ class Match {
       this.team2,
       this.dateTime,
       this.winner = 'NILL',
-      this.voted = 0});
+      this.voted = 'NILL'});
 }
 
 class UserStat {
-  String mail, name;
+  String mail, name, image;
   int won;
   int min;
 
-  UserStat({this.mail, this.min, this.won, this.name});
+  UserStat({this.mail, this.min, this.won, this.name, this.image});
 }
 
 class DataClass extends ChangeNotifier {
   User user;
   Map<String, Match> matches = {};
-
+  UserStat userstat;
   List<UserStat> leaderboard = [];
 
   void add(String id, Match mat) {
@@ -43,6 +43,11 @@ class DataClass extends ChangeNotifier {
   }
 
   void notify() {
+    notifyListeners();
+  }
+
+  void updateuserstat(UserStat userst) {
+    userstat = userst;
     notifyListeners();
   }
 
@@ -56,7 +61,7 @@ class DataClass extends ChangeNotifier {
     notifyListeners();
   }
 
-  void vote(int vot, String id) {
+  void vote(String vot, String id) {
     matches[id].vote(vot);
     notifyListeners();
   }
@@ -101,7 +106,7 @@ Map teams = {
   'CLT': {
     'name': 'Calicut Cavaliers',
     'logo':
-        'https://drive.google.com/uc?export=view&id=19qduGu1PuHoAKvi1L7jRYWSItJtjpnZc',
+        'https://drive.google.com/uc?export=view&id=151702foS4xkfYkq_vpOrgsW4HpQy6Z-6',
     'color': Color.fromRGBO(30, 27, 22, 1)
   },
   'KNR': {
@@ -132,7 +137,7 @@ Map teams = {
     'name': 'Kottayam Koders',
     'logo':
         'https://drive.google.com/uc?export=view&id=1xfEU6jawFRCuHWYEtkWSSmKdiLiFBvEA',
-    'color': Color.fromRGBO(80, 67, 5, 1)
+    'color': Color.fromRGBO(204, 167, 21, 1)
   },
   'KLM': {
     'name': 'Cyber Falcons Kollam',

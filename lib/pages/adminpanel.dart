@@ -39,38 +39,42 @@ class _AdminPanelState extends State<AdminPanel> {
                   Text(
                       'Date: ${data.matches[s].dateTime.day}/${data.matches[s].dateTime.month}/${data.matches[s].dateTime.year}'),
                   Text('Winner: '),
-                  ListTile(
-                    onTap: () {
-                      data.updateWinner(s, 'NILL');
-                      FireBaseService().updatewinner(s, 0);
-                    },
-                    title: Text('None'),
-                    trailing: Radio(
-                        value: 'NILL',
-                        groupValue: data.matches[s].winner,
-                        onChanged: (val) {}),
+                  // ListTile(
+                  //   onTap: () {
+                  //     data.updateWinner(s, 'NILL');
+                  //     FireBaseService().updatewinner(s, 0);
+                  //   },
+                  //   title: Text('None'),
+                  //   trailing: Radio(
+                  //       value: 'NILL',
+                  //       groupValue: data.matches[s].winner,
+                  //       onChanged: (val) {}),
+                  // ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      Row(children: [
+                        Text(data.matches[s].team1),
+                        Radio(
+                            value: data.matches[s].team1,
+                            groupValue: data.matches[s].winner,
+                            onChanged: (val) {
+                              data.updateWinner(s, data.matches[s].team1);
+                              FireBaseService().updatewinner(s, 1);
+                            }),
+                      ]),
+                      Row(children: [
+                        Text(data.matches[s].team2),
+                        Radio(
+                            value: data.matches[s].team2,
+                            groupValue: data.matches[s].winner,
+                            onChanged: (val) {
+                              data.updateWinner(s, data.matches[s].team2);
+                              FireBaseService().updatewinner(s, 2);
+                            })
+                      ]),
+                    ],
                   ),
-                  ListTile(
-                    onTap: () {
-                      data.updateWinner(s, data.matches[s].team1);
-                      FireBaseService().updatewinner(s, 1);
-                    },
-                    title: Text(data.matches[s].team1),
-                    trailing: Radio(
-                        value: data.matches[s].team1,
-                        groupValue: data.matches[s].winner,
-                        onChanged: (val) {}),
-                  ),
-                  ListTile(
-                      onTap: () {
-                        data.updateWinner(s, data.matches[s].team2);
-                        FireBaseService().updatewinner(s, 2);
-                      },
-                      title: Text(data.matches[s].team2),
-                      trailing: Radio(
-                          value: data.matches[s].team2,
-                          groupValue: data.matches[s].winner,
-                          onChanged: (val) {})),
                 ],
               ),
             ),

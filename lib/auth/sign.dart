@@ -20,6 +20,7 @@ class AuthService {
     final UserCredential authResult =
         await _auth.signInWithCredential(credential);
     final User user = authResult.user;
+    // String token=googleSignInAuthentication.accessToken;
     print(user.email);
 
     if (user != null) {
