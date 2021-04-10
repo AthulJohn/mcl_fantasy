@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -121,9 +122,10 @@ class _HomeState extends State<Home> {
                                           Center(
                                             child: Opacity(
                                               opacity: 0.1,
-                                              child: Image.network(
+                                              child: CachedNetworkImage(
                                                 //CodeChef Logo
-                                                "https://drive.google.com/uc?export=view&id=1WSDax83g2k3PC_R3-XU_YriW1F2Ulos3",
+                                                imageUrl:
+                                                    "https://drive.google.com/uc?export=view&id=1WSDax83g2k3PC_R3-XU_YriW1F2Ulos3",
                                                 fit: BoxFit.cover,
                                               ),
                                             ),
@@ -368,9 +370,8 @@ class _HomeState extends State<Home> {
               child: Column(
                 children: [
                   DrawerHeader(
-                      child: CircleAvatar(
-                          child: Image.network(
-                              Provider.of<DataClass>(context).userstat.image))),
+                      child: Image.network(
+                          Provider.of<DataClass>(context).userstat.image)),
                   Text(Provider.of<DataClass>(context).user.displayName),
                   Divider(),
                   Row(
@@ -379,7 +380,7 @@ class _HomeState extends State<Home> {
                       Container(
                         child: Column(
                           children: [
-                            Text('Matches Won'),
+                            Text('Won'),
                             Text(
                                 '${Provider.of<DataClass>(context).userstat.won}')
                           ],
@@ -387,9 +388,9 @@ class _HomeState extends State<Home> {
                       ),
                       Column(
                         children: [
-                          Text('Other'),
+                          Text('Lost'),
                           Text(
-                              '${Provider.of<DataClass>(context).userstat.won}')
+                              '${Provider.of<DataClass>(context).userstat.lost}')
                         ],
                       )
                     ],

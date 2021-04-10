@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mcl_fantasy/classes/dataClass.dart';
@@ -61,8 +62,9 @@ class MainMatchClass extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 Expanded(
-                  child: Image.network(
-                    "https://drive.google.com/uc?export=view&id=1pkRm-_6c_3JOTD0vWOXfSB_EI8ImccJY",
+                  child: CachedNetworkImage(
+                    imageUrl:
+                        "https://drive.google.com/uc?export=view&id=1pkRm-_6c_3JOTD0vWOXfSB_EI8ImccJY",
                     fit: BoxFit.contain,
                   ),
                 ),
@@ -90,8 +92,8 @@ class MainMatchClass extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Expanded(
-                          child: Image.network(
-                            teams[Provider.of<DataClass>(context)
+                          child: CachedNetworkImage(
+                            imageUrl: teams[Provider.of<DataClass>(context)
                                 .matches[s]
                                 .team1]['logo'],
                             fit: BoxFit.contain,
@@ -112,8 +114,9 @@ class MainMatchClass extends StatelessWidget {
                     ),
                   ),
                   Expanded(
-                    child: Image.network(
-                      'https://comicvine1.cbsistatic.com/uploads/original/11141/111417311/7460362-versus-letters-vs-logo-vector-13673484.png',
+                    child: CachedNetworkImage(
+                      imageUrl:
+                          'https://comicvine1.cbsistatic.com/uploads/original/11141/111417311/7460362-versus-letters-vs-logo-vector-13673484.png',
                       fit: BoxFit.contain,
                     ),
                   ),
@@ -123,8 +126,8 @@ class MainMatchClass extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Expanded(
-                          child: Image.network(
-                            teams[Provider.of<DataClass>(context)
+                          child: CachedNetworkImage(
+                            imageUrl: teams[Provider.of<DataClass>(context)
                                 .matches[s]
                                 .team2]['logo'],
                             fit: BoxFit.contain,

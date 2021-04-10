@@ -39,6 +39,7 @@ class FireBaseService {
               Provider.of<DataClass>(context, listen: false).user.displayName,
           mail: usersnap.id,
           won: usersnap.data()['won'] ?? 0,
+          lost: usersnap.data()['lost'] ?? 0,
           min: usersnap.data()['time'] ?? 0,
           image: usersnap.data()['image'] ??
               'https://www.winhelponline.com/blog/wp-content/uploads/2017/12/user.png'));
@@ -47,6 +48,7 @@ class FireBaseService {
           name: Provider.of<DataClass>(context, listen: false).user.displayName,
           mail: Provider.of<DataClass>(context, listen: false).user.email,
           won: 0,
+          lost: 0,
           min: 0,
           image:
               'https://www.winhelponline.com/blog/wp-content/uploads/2017/12/user.png'));
@@ -92,6 +94,7 @@ class FireBaseService {
           .set({
         'won': 0,
         'lost': 0,
+        'time': 0,
         id: team,
         'name': Provider.of<DataClass>(context, listen: false).user.displayName,
         'image': Provider.of<DataClass>(context, listen: false).user.photoURL
@@ -100,7 +103,7 @@ class FireBaseService {
     Provider.of<DataClass>(context, listen: false).vote(team, id);
   }
 
-  void updatewinner(String s, int val) async {
+  void updatewinner(String s, int val, DateTime date) async {
     await firestore
         .collection('Fantasy Results')
         .doc(s)
@@ -115,11 +118,27 @@ class FireBaseService {
         DocumentSnapshot ds =
             await firestore.collection('Users').doc(qds.id).get();
         if (ds.exists) {
-          int mins = DateTime.tryParse(qds.data()['time'])
-              .difference(DateTime(2021, 4))
-              .inMinutes;
-          await firestore.collection('Users').doc(qds.id).update(
-              {'won': ds.data()['won'] + 1, 'time': ds.data()['time'] + mins});
+          int mins =
+              -DateTime.tryParse(qds.data()['time']).difference(date).inMinutes;
+          await firestore.collection('Users').doc(qds.id).update({
+            'won': ds.data()['won'] + 1,
+            'time': (ds.data()['time'] ?? 0) + mins
+          });
+        }
+      }
+      qs = await firestore
+          .collection('Fantasy Results')
+          .doc(s)
+          .collection(val == 2 ? 'Team 1' : 'Team 2')
+          .get();
+      for (QueryDocumentSnapshot qds in qs.docs) {
+        DocumentSnapshot ds =
+            await firestore.collection('Users').doc(qds.id).get();
+        if (ds.exists) {
+          await firestore
+              .collection('Users')
+              .doc(qds.id)
+              .update({'lost': ds.data()['lost'] + 1});
         }
       }
     }
@@ -141,6 +160,7 @@ class FireBaseService {
       Provider.of<DataClass>(context, listen: false).addLeader(UserStat(
           mail: qds.id,
           won: qds.data()['won'] ?? 0,
+          lost: qds.data()['won'] ?? 0,
           min: qds.data()['time'] ?? 0,
           name: qds.data()['name'],
           image: qds.data()['image'] ??

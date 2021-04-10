@@ -26,10 +26,10 @@ class Match {
 
 class UserStat {
   String mail, name, image;
-  int won;
+  int won, lost;
   int min;
 
-  UserStat({this.mail, this.min, this.won, this.name, this.image});
+  UserStat({this.mail, this.min, this.won, this.name, this.image, this.lost});
 }
 
 class DataClass extends ChangeNotifier {
