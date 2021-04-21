@@ -34,8 +34,15 @@ class LeaderBoard extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text('Pos', style: GoogleFonts.aBeeZee()),
-                  Text('    Name', style: GoogleFonts.aBeeZee()),
-                  Text('Points', style: GoogleFonts.aBeeZee()),
+                  Expanded(
+                      child: Text(
+                    '    Name',
+                    style: GoogleFonts.aBeeZee(),
+                    textAlign: TextAlign.center,
+                  )),
+                  Text('Total   ', style: GoogleFonts.aBeeZee()),
+                  Text('Won   ', style: GoogleFonts.aBeeZee()),
+                  Text('Lost', style: GoogleFonts.aBeeZee()),
                 ],
               ),
             ),
@@ -57,20 +64,40 @@ class LeaderBoard extends StatelessWidget {
                       title: Row(
                         children: [
                           CircleAvatar(
-                            child: Image.network(Provider.of<DataClass>(context)
-                                .leaderboard[i]
-                                .image),
+                            foregroundImage: NetworkImage(
+                                Provider.of<DataClass>(context)
+                                    .leaderboard[i]
+                                    .image),
                           ),
-                          Text(
+                          Expanded(
+                            child: Text(
                               '  ' +
                                   Provider.of<DataClass>(context)
                                       .leaderboard[i]
                                       .name,
-                              style: GoogleFonts.aBeeZee()),
+                              overflow: TextOverflow.fade,
+                              softWrap: false,
+                              //     style: GoogleFonts.aBeeZee()
+                            ),
+                          ),
+                          Padding(
+                            padding:
+                                const EdgeInsets.symmetric(horizontal: 15.0),
+                            child: Text(
+                                '${Provider.of<DataClass>(context).leaderboard[i].total}',
+                                style: GoogleFonts.aBeeZee()),
+                          ),
+                          Padding(
+                            padding:
+                                const EdgeInsets.symmetric(horizontal: 15.0),
+                            child: Text(
+                                '${Provider.of<DataClass>(context).leaderboard[i].won}',
+                                style: GoogleFonts.aBeeZee()),
+                          ),
                         ],
                       ),
                       trailing: Text(
-                          '${Provider.of<DataClass>(context).leaderboard[i].won}',
+                          '${Provider.of<DataClass>(context).leaderboard[i].lost}',
                           style: GoogleFonts.aBeeZee()),
                     )
                 ],

@@ -7,6 +7,7 @@ import 'package:mcl_fantasy/auth/firebase.dart';
 import 'package:mcl_fantasy/classes/dataClass.dart';
 import 'package:mcl_fantasy/widgets/loading.dart';
 import 'package:mcl_fantasy/widgets/mainCard.dart';
+import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:provider/provider.dart';
 
 import 'adminpanel.dart';
@@ -23,6 +24,7 @@ class _HomeState extends State<Home> {
 
   PageController pgc;
   List<String> admins = [
+    'b19cs063@mace.ac.in',
     'johnychackopulickal@gmail.com',
     'b19cs068@mace.ac.in',
     'codechef@mace.ac.in'
@@ -33,7 +35,7 @@ class _HomeState extends State<Home> {
   @override
   void initState() {
     super.initState();
-    pgc = PageController(initialPage: widget.page);
+    if (widget.page != -1) pgc = PageController(initialPage: widget.page);
   }
 
   @override
@@ -88,207 +90,86 @@ class _HomeState extends State<Home> {
                         ],
                       ),
                     )
-                  : Provider.of<DataClass>(context).matches.keys.length == 0
-                      ? Center(
-                          child: Column(
-                            children: [
-                              SpinKitRipple(),
-                              Text('Looks like there is nothing here!')
-                            ],
+                  : PageView(
+                      controller: pgc,
+                      children: [
+                        if (admins.contains(
+                            Provider.of<DataClass>(context).user.email))
+                          AdminPanel(),
+                        if (Provider.of<DataClass>(context)
+                                .matches
+                                .keys
+                                .length ==
+                            0)
+                          Center(
+                            child: Column(
+                              children: [
+                                SpinKitRipple(
+                                  color: Colors.black,
+                                ),
+                                Text(
+                                  'No match has been scheduled!',
+                                  style: GoogleFonts.aBeeZee(),
+                                )
+                              ],
+                            ),
                           ),
-                        )
-                      : PageView(
-                          controller: pgc,
-                          children: [
-                            if (admins.contains(
-                                Provider.of<DataClass>(context).user.email))
-                              AdminPanel(),
-                            for (String s
-                                in Provider.of<DataClass>(context).matches.keys)
-                              Card(
-                                elevation: 10,
-                                shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(8)),
-                                margin: EdgeInsets.all(12),
-                                child: Column(
-                                  children: [
-                                    //Poster Card including of team logos and names
-                                    Expanded(flex: 3, child: MainMatchClass(s)),
-                                    //Prediction buttons
-                                    Expanded(
-                                      child: Stack(
-                                        alignment: AlignmentDirectional.center,
-                                        children: [
-                                          Center(
-                                            child: Opacity(
-                                              opacity: 0.1,
-                                              child: CachedNetworkImage(
-                                                //CodeChef Logo
-                                                imageUrl:
-                                                    "https://drive.google.com/uc?export=view&id=1WSDax83g2k3PC_R3-XU_YriW1F2Ulos3",
-                                                fit: BoxFit.cover,
-                                              ),
-                                            ),
+                        for (String s
+                            in Provider.of<DataClass>(context).matches.keys)
+                          Card(
+                            elevation: 10,
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8)),
+                            margin: EdgeInsets.all(12),
+                            child: Column(
+                              children: [
+                                //Poster Card including of team logos and names
+                                Expanded(flex: 3, child: MainMatchClass(s)),
+                                //Prediction buttons
+                                Expanded(
+                                  child: Stack(
+                                    alignment: AlignmentDirectional.center,
+                                    children: [
+                                      Center(
+                                        child: Opacity(
+                                          opacity: 0.075,
+                                          child: CachedNetworkImage(
+                                            //CodeChef Logo
+                                            imageUrl:
+                                                "https://drive.google.com/uc?export=view&id=1WSDax83g2k3PC_R3-XU_YriW1F2Ulos3",
+                                            fit: BoxFit.cover,
                                           ),
-                                          Center(
-                                            child: Column(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.center,
-                                                children: [
-                                                  Container(
-                                                    child:
+                                        ),
+                                      ),
+                                      Center(
+                                        child: Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              Container(
+                                                child:
 
-                                                        //IF 2: if it is match day (before 24 hours of the match time)
+                                                    //IF 2: if it is match day (before 24 hours of the match time)
+                                                    Provider.of<DataClass>(
+                                                                context)
+                                                            .matches[s]
+                                                            .checkStartTime()
+                                                        ? //IF 3: if the user has voted
                                                         Provider.of<DataClass>(
-                                                                    context)
-                                                                .matches[s]
-                                                                .dateTime
-                                                                .isBefore(DateTime
-                                                                        .now()
-                                                                    .add(Duration(
-                                                                        days:
-                                                                            1)))
-                                                            ? //IF 3: if the user has voted
-                                                            Provider.of<DataClass>(
-                                                                            context)
-                                                                        .matches[
-                                                                            s]
-                                                                        .voted !=
-                                                                    'NILL'
-                                                                ? Center(
-                                                                    child: Text(
-                                                                      'Voted ${teams[Provider.of<DataClass>(context).matches[s].voted]['name']}',
-                                                                      style: GoogleFonts
-                                                                          .bebasNeue(
-                                                                        color: teams[Provider.of<DataClass>(context)
-                                                                            .matches[s]
-                                                                            .voted]['color'],
-                                                                        fontSize:
-                                                                            24,
-                                                                        fontWeight:
-                                                                            FontWeight.w700,
-                                                                      ),
-                                                                    ),
-                                                                  )
-                                                                : //ELSE of IF 3: (user has not voted)
-                                                                // IF 5: if the match has started/ended
-                                                                Provider.of<DataClass>(
-                                                                            context)
-                                                                        .matches[
-                                                                            s]
-                                                                        .dateTime
-                                                                        .isAfter(
-                                                                            DateTime.now())
-                                                                    ? Column(
-                                                                        mainAxisAlignment:
-                                                                            MainAxisAlignment.center,
-                                                                        children: [
-                                                                          Text(
-                                                                            'Predict the winner',
-                                                                            style:
-                                                                                GoogleFonts.bebasNeue(
-                                                                              color: Colors.black,
-                                                                              fontSize: 18,
-                                                                              fontWeight: FontWeight.w700,
-                                                                            ),
-                                                                          ),
-                                                                          Row(
-                                                                            children: [
-                                                                              SizedBox(
-                                                                                width: MediaQuery.of(context).size.width * 0.10,
-                                                                              ),
-                                                                              Container(
-                                                                                height: 35,
-                                                                                width: 85,
-                                                                                decoration: BoxDecoration(
-                                                                                    shape: BoxShape.rectangle,
-                                                                                    borderRadius: BorderRadius.all(
-                                                                                      Radius.circular(5.0),
-                                                                                    ),
-                                                                                    color: teams[Provider.of<DataClass>(context).matches[s].team1]['color']),
-                                                                                child: TextButton(
-                                                                                  onPressed: () async {
-                                                                                    setState(() {
-                                                                                      loading = true;
-                                                                                    });
-                                                                                    try {
-                                                                                      await FireBaseService().vote(context, 1, Provider.of<DataClass>(context, listen: false).matches[s].team1, s);
-                                                                                    } catch (e) {
-                                                                                      setState(() {
-                                                                                        loading = false;
-                                                                                      });
-                                                                                      print(e);
-                                                                                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Oops! Error submiting your Prediction!')));
-                                                                                    }
-                                                                                    setState(() {
-                                                                                      loading = false;
-                                                                                    });
-                                                                                  },
-                                                                                  child: Center(
-                                                                                    child: Text(
-                                                                                      '${Provider.of<DataClass>(context).matches[s].team1}',
-                                                                                      style: TextStyle(
-                                                                                        fontSize: 18,
-                                                                                        color: Colors.white,
-                                                                                      ),
-                                                                                    ),
-                                                                                  ),
-                                                                                ),
-                                                                              ),
-                                                                              SizedBox(
-                                                                                width: MediaQuery.of(context).size.width * 0.30,
-                                                                              ),
-                                                                              Container(
-                                                                                height: 35,
-                                                                                width: 85,
-                                                                                decoration: BoxDecoration(
-                                                                                    shape: BoxShape.rectangle,
-                                                                                    borderRadius: BorderRadius.all(
-                                                                                      Radius.circular(5.0),
-                                                                                    ),
-                                                                                    color: teams[Provider.of<DataClass>(context).matches[s].team2]['color']),
-                                                                                child: TextButton(
-                                                                                  onPressed: () async {
-                                                                                    setState(() {
-                                                                                      loading = true;
-                                                                                    });
-                                                                                    try {
-                                                                                      await FireBaseService().vote(context, 2, Provider.of<DataClass>(context, listen: false).matches[s].team2, s);
-                                                                                    } catch (e) {
-                                                                                      setState(() {
-                                                                                        loading = false;
-                                                                                      });
-                                                                                      print(e);
-                                                                                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Oops! Error submiting your Prediction!')));
-                                                                                    }
-                                                                                    setState(() {
-                                                                                      loading = false;
-                                                                                    });
-                                                                                  },
-                                                                                  child: Center(
-                                                                                    child: Text(
-                                                                                      '${Provider.of<DataClass>(context).matches[s].team2}',
-                                                                                      style: TextStyle(
-                                                                                        fontSize: 18,
-                                                                                        color: Colors.white,
-                                                                                      ),
-                                                                                    ),
-                                                                                  ),
-                                                                                ),
-                                                                              ),
-                                                                            ],
-                                                                          ),
-                                                                        ],
-                                                                      )
-                                                                    : Container()
-                                                            : //ELSE of IF 2: (It is not match day)
-                                                            Center(
+                                                                        context)
+                                                                    .matches[s]
+                                                                    .voted !=
+                                                                'NILL'
+                                                            ? Center(
                                                                 child: Text(
-                                                                  'Prediction has not yet started!!',
+                                                                  'Voted ${teams[Provider.of<DataClass>(context).matches[s].voted]['name']}',
                                                                   style: GoogleFonts
                                                                       .bebasNeue(
-                                                                    color: Colors
-                                                                        .black,
+                                                                    color: teams[Provider.of<DataClass>(
+                                                                            context)
+                                                                        .matches[
+                                                                            s]
+                                                                        .voted]['color'],
                                                                     fontSize:
                                                                         24,
                                                                     fontWeight:
@@ -296,83 +177,254 @@ class _HomeState extends State<Home> {
                                                                             .w700,
                                                                   ),
                                                                 ),
+                                                              )
+                                                            : //ELSE of IF 3: (user has not voted)
+                                                            // IF 5: if the match has not started/ended
+                                                            Provider.of<DataClass>(
+                                                                        context)
+                                                                    .matches[s]
+                                                                    .checkEndTime()
+                                                                ? Column(
+                                                                    mainAxisAlignment:
+                                                                        MainAxisAlignment
+                                                                            .center,
+                                                                    children: [
+                                                                      Text(
+                                                                        'Predict the winner',
+                                                                        style: GoogleFonts
+                                                                            .bebasNeue(
+                                                                          color:
+                                                                              Colors.black,
+                                                                          fontSize:
+                                                                              18,
+                                                                          fontWeight:
+                                                                              FontWeight.w700,
+                                                                        ),
+                                                                      ),
+                                                                      Row(
+                                                                        children: [
+                                                                          SizedBox(
+                                                                            width:
+                                                                                MediaQuery.of(context).size.width * 0.10,
+                                                                          ),
+                                                                          Container(
+                                                                            height:
+                                                                                35,
+                                                                            width:
+                                                                                85,
+                                                                            decoration: BoxDecoration(
+                                                                                shape: BoxShape.rectangle,
+                                                                                borderRadius: BorderRadius.all(
+                                                                                  Radius.circular(5.0),
+                                                                                ),
+                                                                                color: teams[Provider.of<DataClass>(context).matches[s].team1]['color']),
+                                                                            child:
+                                                                                TextButton(
+                                                                              onPressed: () async {
+                                                                                setState(() {
+                                                                                  loading = true;
+                                                                                });
+                                                                                bool connect = await connected();
+                                                                                if (connect) {
+                                                                                  try {
+                                                                                    await FireBaseService().vote(context, 1, Provider.of<DataClass>(context, listen: false).matches[s].team1, s);
+                                                                                  } catch (e) {
+                                                                                    setState(() {
+                                                                                      loading = false;
+                                                                                    });
+                                                                                    print(e);
+                                                                                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Oops! Error submiting your Prediction!')));
+                                                                                  }
+                                                                                  setState(() {
+                                                                                    loading = false;
+                                                                                  });
+                                                                                } else {
+                                                                                  setState(() {
+                                                                                    loading = false;
+                                                                                  });
+                                                                                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Oops, Could not connect to a network!')));
+                                                                                }
+                                                                              },
+                                                                              child: Center(
+                                                                                child: Text(
+                                                                                  '${Provider.of<DataClass>(context).matches[s].team1}',
+                                                                                  style: TextStyle(
+                                                                                    fontSize: 18,
+                                                                                    color: Colors.white,
+                                                                                  ),
+                                                                                ),
+                                                                              ),
+                                                                            ),
+                                                                          ),
+                                                                          SizedBox(
+                                                                            width:
+                                                                                MediaQuery.of(context).size.width * 0.30,
+                                                                          ),
+                                                                          Container(
+                                                                            height:
+                                                                                35,
+                                                                            width:
+                                                                                85,
+                                                                            decoration: BoxDecoration(
+                                                                                shape: BoxShape.rectangle,
+                                                                                borderRadius: BorderRadius.all(
+                                                                                  Radius.circular(5.0),
+                                                                                ),
+                                                                                color: teams[Provider.of<DataClass>(context).matches[s].team2]['color']),
+                                                                            child:
+                                                                                TextButton(
+                                                                              onPressed: () async {
+                                                                                setState(() {
+                                                                                  loading = true;
+                                                                                });
+                                                                                bool connect = await connected();
+                                                                                if (connect) {
+                                                                                  try {
+                                                                                    await FireBaseService().vote(context, 2, Provider.of<DataClass>(context, listen: false).matches[s].team2, s);
+                                                                                  } catch (e) {
+                                                                                    setState(() {
+                                                                                      loading = false;
+                                                                                    });
+                                                                                    print(e);
+                                                                                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Oops! Error submiting your Prediction!')));
+                                                                                  }
+                                                                                  setState(() {
+                                                                                    loading = false;
+                                                                                  });
+                                                                                } else {
+                                                                                  setState(() {
+                                                                                    loading = false;
+                                                                                  });
+                                                                                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Oops, Could not connect to a network!')));
+                                                                                }
+                                                                              },
+                                                                              child: Center(
+                                                                                child: Text(
+                                                                                  '${Provider.of<DataClass>(context).matches[s].team2}',
+                                                                                  style: TextStyle(
+                                                                                    fontSize: 18,
+                                                                                    color: Colors.white,
+                                                                                  ),
+                                                                                ),
+                                                                              ),
+                                                                            ),
+                                                                          ),
+                                                                        ],
+                                                                      ),
+                                                                    ],
+                                                                  )
+                                                                : Container()
+                                                        : //ELSE of IF 2: (It is not match day)
+                                                        Center(
+                                                            child: Text(
+                                                              'Prediction has not yet started!!',
+                                                              style: GoogleFonts
+                                                                  .bebasNeue(
+                                                                color: Colors
+                                                                    .black,
+                                                                fontSize: 24,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w700,
                                                               ),
-                                                  ),
-                                                  Provider.of<DataClass>(
-                                                              context)
-                                                          .matches[s]
-                                                          .dateTime
-                                                          .isBefore(DateTime
-                                                              .now()) // IF 4: If the winner is unknown (not updated)
-                                                      ? Provider.of<DataClass>(
-                                                                      context)
-                                                                  .matches[s]
-                                                                  .winner ==
-                                                              'NILL'
-                                                          ? Center(
-                                                              child: Text(
-                                                                'Prediction Time Over!',
-                                                                style: GoogleFonts
-                                                                    .bebasNeue(
-                                                                  color: Colors
-                                                                      .black,
-                                                                  fontSize: 24,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .w700,
-                                                                ),
-                                                              ),
-                                                            )
-                                                          : //ELSE of IF 4: if the winner is updated
-                                                          Center(
-                                                              child: Text(
-                                                                teams[Provider.of<DataClass>(
-                                                                            context)
-                                                                        .matches[
-                                                                            s]
-                                                                        .winner]['name'] +
-                                                                    ' has won',
-                                                                style: GoogleFonts
-                                                                    .bebasNeue(
-                                                                  color: Provider.of<DataClass>(context).matches[s].winner ==
-                                                                          Provider.of<DataClass>(context)
+                                                            ),
+                                                          ),
+                                              ),
+                                              !Provider.of<DataClass>(context)
+                                                      .matches[s]
+                                                      .checkEndTime() // IF 4: If the winner is unknown (not updated)
+                                                  ? Provider.of<DataClass>(
+                                                                  context)
+                                                              .matches[s]
+                                                              .winner ==
+                                                          'NILL'
+                                                      ? Center(
+                                                          child: Text(
+                                                            'Prediction Time Over!',
+                                                            style: GoogleFonts
+                                                                .bebasNeue(
+                                                              color:
+                                                                  Colors.black,
+                                                              fontSize: 24,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w700,
+                                                            ),
+                                                          ),
+                                                        )
+                                                      : //ELSE of IF 4: if the winner is updated
+                                                      Center(
+                                                          child: Text(
+                                                            teams[Provider.of<
+                                                                            DataClass>(
+                                                                        context)
+                                                                    .matches[s]
+                                                                    .winner]['name'] +
+                                                                ' has won',
+                                                            style: GoogleFonts
+                                                                .bebasNeue(
+                                                              color: Provider.of<DataClass>(
+                                                                              context)
+                                                                          .matches[
+                                                                              s]
+                                                                          .winner ==
+                                                                      Provider.of<DataClass>(
+                                                                              context)
+                                                                          .matches[
+                                                                              s]
+                                                                          .voted
+                                                                  ? Colors.green
+                                                                  : Provider.of<DataClass>(context)
                                                                               .matches[
                                                                                   s]
-                                                                              .voted
+                                                                              .voted ==
+                                                                          'NILL'
                                                                       ? Colors
-                                                                          .green
-                                                                      : Provider.of<DataClass>(context).matches[s].voted ==
-                                                                              'NILL'
-                                                                          ? Colors
-                                                                              .black
-                                                                          : Colors
-                                                                              .red,
-                                                                  fontSize: 24,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .w700,
-                                                                ),
-                                                              ),
-                                                            )
-                                                      : Container(),
-                                                ]),
-                                          ),
-                                        ],
+                                                                          .black
+                                                                      : Colors
+                                                                          .red,
+                                                              fontSize: 24,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w700,
+                                                            ),
+                                                          ),
+                                                        )
+                                                  : Container(),
+                                            ]),
                                       ),
-                                    )
-                                  ],
-                                ),
-                              )
-                          ],
-                        ),
+                                    ],
+                                  ),
+                                )
+                              ],
+                            ),
+                          )
+                      ],
+                    ),
             ),
             drawer: Drawer(
               child: Column(
                 children: [
                   DrawerHeader(
-                      child: Image.network(
-                          Provider.of<DataClass>(context).userstat.image)),
-                  Text(Provider.of<DataClass>(context).user.displayName),
+                      child: CircleAvatar(
+                    radius: 55,
+                    foregroundImage: NetworkImage(
+                        Provider.of<DataClass>(context).userstat.image),
+                  )),
+                  Text(Provider.of<DataClass>(context).getUserName(),
+                      style: GoogleFonts.aBeeZee(fontSize: 23)),
+                  Divider(),
+                  Container(
+                    child: Column(
+                      children: [
+                        Text('Total Matches Predicted',
+                            style: GoogleFonts.aBeeZee(fontSize: 19)),
+                        Text(
+                            '${Provider.of<DataClass>(context).userstat.total}',
+                            style: GoogleFonts.aBeeZee(fontSize: 19))
+                      ],
+                    ),
+                  ),
                   Divider(),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -380,17 +432,21 @@ class _HomeState extends State<Home> {
                       Container(
                         child: Column(
                           children: [
-                            Text('Won'),
+                            Text('Won',
+                                style: GoogleFonts.aBeeZee(fontSize: 19)),
                             Text(
-                                '${Provider.of<DataClass>(context).userstat.won}')
+                                '${Provider.of<DataClass>(context).userstat.won}',
+                                style: GoogleFonts.aBeeZee(fontSize: 19))
                           ],
                         ),
                       ),
                       Column(
                         children: [
-                          Text('Lost'),
+                          Text('Lost',
+                              style: GoogleFonts.aBeeZee(fontSize: 19)),
                           Text(
-                              '${Provider.of<DataClass>(context).userstat.lost}')
+                              '${Provider.of<DataClass>(context).userstat.lost}',
+                              style: GoogleFonts.aBeeZee(fontSize: 19))
                         ],
                       )
                     ],

@@ -76,6 +76,14 @@ class MainMatchClass extends StatelessWidget {
                     fontWeight: FontWeight.w700,
                   ),
                 ),
+                Text(
+                  'Group ' + Provider.of<DataClass>(context).matches[s].group,
+                  style: GoogleFonts.bebasNeue(
+                    color: Colors.white,
+                    fontSize: 25,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
               ],
             ),
           ),

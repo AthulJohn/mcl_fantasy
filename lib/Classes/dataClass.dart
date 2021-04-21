@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
@@ -8,6 +10,7 @@ class Match {
   String team2;
   String winner = "NILL";
   String voted = "NILL";
+  String group = 'A';
   void vote(String vot) {
     voted = vot;
   }
@@ -16,20 +19,42 @@ class Match {
     winner = win;
   }
 
+  bool checkStartTime() {
+    DateTime d = dateTime.subtract(Duration(days: 1));
+    return DateTime(d.year, d.month, d.day).isBefore(DateTime.now());
+  }
+
+  bool checkEndTime() {
+    DateTime d = dateTime;
+    return DateTime(d.year, d.month, d.day, 6).isAfter(DateTime.now());
+  }
+
   Match(
       {this.team1,
       this.team2,
       this.dateTime,
       this.winner = 'NILL',
-      this.voted = 'NILL'});
+      this.voted = 'NILL',
+      @required this.group});
 }
 
 class UserStat {
+  void incrementTotal() {
+    total++;
+  }
+
   String mail, name, image;
   int won, lost;
-  int min;
+  int min, total;
 
-  UserStat({this.mail, this.min, this.won, this.name, this.image, this.lost});
+  UserStat(
+      {this.mail,
+      this.min,
+      this.won,
+      this.name,
+      this.image,
+      this.lost,
+      this.total});
 }
 
 class DataClass extends ChangeNotifier {
@@ -37,6 +62,22 @@ class DataClass extends ChangeNotifier {
   Map<String, Match> matches = {};
   UserStat userstat;
   List<UserStat> leaderboard = [];
+  bool loader = false;
+  void updateloader() {
+    loader = !loader;
+    notifyListeners();
+  }
+
+  String getUserName() {
+    List<String> l = user.displayName.split(" ");
+    String name = '';
+    for (int i = 0; i < l.length && i < 2; i++) {
+      l[i] = l[i].toLowerCase();
+      l[i] = l[i].replaceRange(0, 1, l[i][0].toUpperCase());
+      name += (l[i] + ' ');
+    }
+    return name;
+  }
 
   void add(String id, Match mat) {
     matches[id] = mat;
@@ -81,6 +122,19 @@ class DataClass extends ChangeNotifier {
       else
         return b.won.compareTo(a.won);
     });
+  }
+}
+
+Future<bool> connected() async {
+  try {
+    final result = await InternetAddress.lookup('google.com');
+    if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
+      return true;
+    } else {
+      return false;
+    }
+  } on SocketException catch (_) {
+    return false;
   }
 }
 
@@ -149,7 +203,7 @@ Map teams = {
     'name': 'Malappuram Mavericks',
     'logo':
         'https://drive.google.com/uc?export=view&id=1sgWYNNHjvLsdC6og-A71f0STfAup1hjl',
-    'color': Color.fromRGBO(33, 62, 102, 1)
+    'color': Color.fromRGBO(28, 57, 97, 1)
   },
   'PTM': {
     'name': 'Royal Pythons Pathanamthitta',

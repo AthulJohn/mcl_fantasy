@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.mcl_fantasy">
    <application
-        android:label="mcl_fantasy"
+        android:label="MCL Fantasy"
         android:icon="@mipmap/ic_launcher">
         <activity
             android:name=".MainActivity"

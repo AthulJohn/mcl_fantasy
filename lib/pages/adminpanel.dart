@@ -3,6 +3,7 @@ import 'package:mcl_fantasy/auth/firebase.dart';
 import 'package:mcl_fantasy/classes/dataClass.dart';
 import 'package:mcl_fantasy/widgets/addDialog.dart';
 import 'package:mcl_fantasy/widgets/loading.dart';
+import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:provider/provider.dart';
 
 class AdminPanel extends StatefulWidget {
@@ -39,6 +40,7 @@ class _AdminPanelState extends State<AdminPanel> {
                     elevation: 5,
                     child: Column(
                       children: [
+                        Text(s),
                         Text(data.matches[s].team1 +
                             ' vs ' +
                             data.matches[s].team2),
@@ -55,63 +57,83 @@ class _AdminPanelState extends State<AdminPanel> {
                                     Radio(
                                         value: data.matches[s].team1,
                                         groupValue: data.matches[s].winner,
-                                        onChanged: (val) {
-                                          setState(() {
-                                            loading = true;
-                                          });
-                                          showDialog(
-                                              context: context,
-                                              builder: (context) {
-                                                return AlertDialog(
-                                                  title: Text("Really?"),
-                                                  content: Text(data
-                                                          .matches[s].team1 +
-                                                      " won and " +
-                                                      data.matches[s].team2 +
-                                                      " lost?"),
-                                                  actions: [
-                                                    TextButton(
-                                                      child: Text('Nah..'),
-                                                      onPressed: () {
-                                                        Navigator.pop(context);
-                                                      },
-                                                    ),
-                                                    TextButton(
-                                                      child: Text('Yeah..'),
-                                                      onPressed: () {
-                                                        Navigator.pop(context);
-                                                        try {
-                                                          data.updateWinner(
-                                                              s,
-                                                              data.matches[s]
-                                                                  .team1);
-                                                          FireBaseService()
-                                                              .updatewinner(
-                                                                  s,
-                                                                  1,
-                                                                  data
-                                                                      .matches[
-                                                                          s]
-                                                                      .dateTime);
-                                                        } catch (e) {
+                                        onChanged: (val) async {
+                                          bool connect = await connected();
+                                          if (connect) {
+                                            showDialog(
+                                                context: context,
+                                                builder: (context) {
+                                                  return AlertDialog(
+                                                    title: Text("Really?"),
+                                                    content: Text(data
+                                                            .matches[s].team1 +
+                                                        " won and " +
+                                                        data.matches[s].team2 +
+                                                        " lost?"),
+                                                    actions: [
+                                                      TextButton(
+                                                        child: Text('Nah..'),
+                                                        onPressed: () {
+                                                          Navigator.pop(
+                                                              context);
+                                                        },
+                                                      ),
+                                                      TextButton(
+                                                        child: Text('Yeah..'),
+                                                        onPressed: () async {
+                                                          Navigator.pop(
+                                                              context);
+
+                                                          try {
+                                                            data.updateWinner(
+                                                                s,
+                                                                data.matches[s]
+                                                                    .team1);
+                                                            await FireBaseService()
+                                                                .updatewinner(
+                                                                    s,
+                                                                    1,
+                                                                    data
+                                                                        .matches[
+                                                                            s]
+                                                                        .dateTime);
+                                                            List<String> ids =
+                                                                await FireBaseService()
+                                                                    .getPlayerID();
+                                                            OneSignal.shared.postNotification(
+                                                                OSCreateNotification(
+                                                                    playerIds:
+                                                                        ids,
+                                                                    content:
+                                                                        'A new match result has been updated! Check whether your prediction stands...',
+                                                                    heading:
+                                                                        'Match Result Updated!'));
+                                                          } catch (e) {
+                                                            setState(() {
+                                                              loading = false;
+                                                            });
+                                                            print(e);
+                                                            ScaffoldMessenger
+                                                                    .of(context)
+                                                                .showSnackBar(
+                                                                    SnackBar(
+                                                                        content:
+                                                                            Text('Oops! Error submiting winner!')));
+                                                          }
                                                           setState(() {
                                                             loading = false;
                                                           });
-                                                          print(e);
-                                                          ScaffoldMessenger.of(
-                                                                  context)
-                                                              .showSnackBar(SnackBar(
-                                                                  content: Text(
-                                                                      'Oops! Error submiting winner!')));
-                                                        }
-                                                        setState(() {
-                                                          loading = false;
-                                                        });
-                                                      },
-                                                    ),
-                                                  ],
-                                                );
-                                              });
+                                                        },
+                                                      ),
+                                                    ],
+                                                  );
+                                                });
+                                          } else {
+                                            ScaffoldMessenger.of(context)
+                                                .showSnackBar(SnackBar(
+                                                    content: Text(
+                                                        'Oops, Could not connect to a network!')));
+                                          }
                                         }),
                                   ]),
                                   Row(children: [
@@ -119,63 +141,89 @@ class _AdminPanelState extends State<AdminPanel> {
                                     Radio(
                                         value: data.matches[s].team2,
                                         groupValue: data.matches[s].winner,
-                                        onChanged: (val) {
-                                          setState(() {
-                                            loading = true;
-                                          });
-                                          showDialog(
-                                              context: context,
-                                              builder: (context) {
-                                                return AlertDialog(
-                                                  title: Text("Really?"),
-                                                  content: Text(data
-                                                          .matches[s].team2 +
-                                                      " won and " +
-                                                      data.matches[s].team1 +
-                                                      " lost?"),
-                                                  actions: [
-                                                    TextButton(
-                                                      child: Text('Nah..'),
-                                                      onPressed: () {
-                                                        Navigator.pop(context);
-                                                      },
-                                                    ),
-                                                    TextButton(
-                                                      child: Text('Yeah..'),
-                                                      onPressed: () {
-                                                        Navigator.pop(context);
-                                                        try {
-                                                          data.updateWinner(
-                                                              s,
-                                                              data.matches[s]
-                                                                  .team2);
-                                                          FireBaseService()
-                                                              .updatewinner(
-                                                                  s,
-                                                                  2,
-                                                                  data
-                                                                      .matches[
-                                                                          s]
-                                                                      .dateTime);
-                                                        } catch (e) {
+                                        onChanged: (val) async {
+                                          bool alertloading = false;
+
+                                          bool connect = await connected();
+                                          if (connect) {
+                                            showDialog(
+                                                context: context,
+                                                builder: (context) {
+                                                  return AlertDialog(
+                                                    title: Text("Really?"),
+                                                    content: Text(data
+                                                            .matches[s].team2 +
+                                                        " won and " +
+                                                        data.matches[s].team1 +
+                                                        " lost?"),
+                                                    actions: [
+                                                      TextButton(
+                                                        child: Text('Nah..'),
+                                                        onPressed: () {
+                                                          Navigator.pop(
+                                                              context);
+                                                        },
+                                                      ),
+                                                      TextButton(
+                                                        child: Text('Yeah..'),
+                                                        onPressed: () async {
                                                           setState(() {
-                                                            loading = false;
+                                                            alertloading = true;
                                                           });
-                                                          print(e);
-                                                          ScaffoldMessenger.of(
-                                                                  context)
-                                                              .showSnackBar(SnackBar(
-                                                                  content: Text(
-                                                                      'Oops! Error submiting winner!')));
-                                                        }
-                                                        setState(() {
-                                                          loading = false;
-                                                        });
-                                                      },
-                                                    ),
-                                                  ],
-                                                );
-                                              });
+                                                          try {
+                                                            data.updateWinner(
+                                                                s,
+                                                                data.matches[s]
+                                                                    .team2);
+                                                            await FireBaseService()
+                                                                .updatewinner(
+                                                                    s,
+                                                                    2,
+                                                                    data
+                                                                        .matches[
+                                                                            s]
+                                                                        .dateTime);
+                                                            List<String> ids =
+                                                                await FireBaseService()
+                                                                    .getPlayerID();
+                                                            OneSignal.shared.postNotification(
+                                                                OSCreateNotification(
+                                                                    playerIds:
+                                                                        ids,
+                                                                    content:
+                                                                        'A new match result has been updated! Check whether your prediction stands...',
+                                                                    heading:
+                                                                        'Match Result Updated!'));
+                                                          } catch (e) {
+                                                            setState(() {
+                                                              alertloading =
+                                                                  false;
+                                                            });
+                                                            print(e);
+                                                            ScaffoldMessenger
+                                                                    .of(context)
+                                                                .showSnackBar(
+                                                                    SnackBar(
+                                                                        content:
+                                                                            Text('Oops! Error submiting winner!')));
+                                                          }
+                                                          setState(() {
+                                                            alertloading =
+                                                                false;
+                                                          });
+                                                          Navigator.pop(
+                                                              context);
+                                                        },
+                                                      ),
+                                                    ],
+                                                  );
+                                                });
+                                          } else {
+                                            ScaffoldMessenger.of(context)
+                                                .showSnackBar(SnackBar(
+                                                    content: Text(
+                                                        'Oops, Could not connect to a network!')));
+                                          }
                                         })
                                   ]),
                                 ],
@@ -191,12 +239,22 @@ class _AdminPanelState extends State<AdminPanel> {
                       Icons.add_circle,
                       size: 40,
                     ),
-                    onPressed: () {
-                      showDialog(
-                          context: context,
-                          builder: (context) {
-                            return AddDialog();
-                          });
+                    onPressed: () async {
+                      bool connect = await connected();
+                      if (connect) {
+                        showDialog(
+                            context: context,
+                            builder: (context) {
+                              return AddDialog();
+                            });
+                      } else {
+                        setState(() {
+                          loading = false;
+                        });
+                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                            content:
+                                Text('Oops, Could not connect to a network!')));
+                      }
                     },
                   ),
                 )
