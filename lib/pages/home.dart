@@ -355,12 +355,19 @@ class _HomeState extends State<Home> {
                                                       : //ELSE of IF 4: if the winner is updated
                                                       Center(
                                                           child: Text(
-                                                            teams[Provider.of<
-                                                                            DataClass>(
-                                                                        context)
-                                                                    .matches[s]
-                                                                    .winner]['name'] +
-                                                                ' has won',
+                                                            Provider.of<DataClass>(
+                                                                            context)
+                                                                        .matches[
+                                                                            s]
+                                                                        .winner ==
+                                                                    'DRAW' // If the match is a draw
+                                                                ? 'The match is a Draw!' // If the match has a winner
+                                                                : teams[Provider.of<DataClass>(
+                                                                            context)
+                                                                        .matches[
+                                                                            s]
+                                                                        .winner]['name'] +
+                                                                    ' has won',
                                                             style: GoogleFonts
                                                                 .bebasNeue(
                                                               color: Provider.of<DataClass>(
@@ -368,21 +375,21 @@ class _HomeState extends State<Home> {
                                                                           .matches[
                                                                               s]
                                                                           .winner ==
-                                                                      Provider.of<DataClass>(
-                                                                              context)
-                                                                          .matches[
-                                                                              s]
-                                                                          .voted
-                                                                  ? Colors.green
-                                                                  : Provider.of<DataClass>(context)
+                                                                      'DRAW'
+                                                                  ? Colors.blue
+                                                                  : Provider.of<DataClass>(context).matches[s].winner ==
+                                                                          Provider.of<DataClass>(context)
                                                                               .matches[
                                                                                   s]
-                                                                              .voted ==
-                                                                          'NILL'
+                                                                              .voted
                                                                       ? Colors
-                                                                          .black
-                                                                      : Colors
-                                                                          .red,
+                                                                          .green
+                                                                      : Provider.of<DataClass>(context).matches[s].voted ==
+                                                                              'NILL'
+                                                                          ? Colors
+                                                                              .black
+                                                                          : Colors
+                                                                              .red,
                                                               fontSize: 24,
                                                               fontWeight:
                                                                   FontWeight

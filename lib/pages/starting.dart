@@ -10,33 +10,40 @@ import 'package:provider/provider.dart';
 class Starting extends StatelessWidget {
   void initialise(context) async {
     int page = 0;
-    if (AuthService().isnotSignedIn()) {
-      User u = await AuthService().signInWithGoogle();
-      if (u == null) {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-            content: Text(
-                'Error signing in! Make sure you are using your mace mail ID.')));
-        return;
+    bool con = await connected();
+    if (con) {
+      if (AuthService().isnotSignedIn()) {
+        User u = await AuthService().signInWithGoogle();
+        if (u == null) {
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+              content: Text(
+                  'Error signing in! Make sure you are using your mace mail ID.')));
+          return;
+        }
+        try {
+          Provider.of<DataClass>(context, listen: false).updateuser(u);
+          await FireBaseService().getTeams(context);
+        } catch (e) {
+          print(e);
+          ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text('Oops, Error getting data from Cloud!')));
+          return;
+        }
       }
-      try {
-        Provider.of<DataClass>(context, listen: false).updateuser(u);
-        await FireBaseService().getTeams(context);
-      } catch (e) {
-        print(e);
-        ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Oops, Error getting data from Cloud!')));
-        return;
-      }
+      Map mats = Provider.of<DataClass>(context, listen: false).matches;
+      for (String s in mats.keys)
+        if (mats[s].dateTime.isAfter(DateTime.now())) {
+          page = mats.keys.toList().indexOf(s);
+          break;
+        }
+      Provider.of<DataClass>(context, listen: false).updateloader();
+      Navigator.pushReplacement(
+          context, MaterialPageRoute(builder: (context) => Home(page)));
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text(
+              'Oops, No Internet! Please check your internet connection')));
     }
-    Map mats = Provider.of<DataClass>(context, listen: false).matches;
-    for (String s in mats.keys)
-      if (mats[s].dateTime.isAfter(DateTime.now())) {
-        page = mats.keys.toList().indexOf(s);
-        break;
-      }
-    Provider.of<DataClass>(context, listen: false).updateloader();
-    Navigator.pushReplacement(
-        context, MaterialPageRoute(builder: (context) => Home(page)));
   }
 
   @override
@@ -57,6 +64,18 @@ class Starting extends StatelessWidget {
             color: Colors.black,
           ),
         ),
+        Container(
+            height: 80,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text('Powered by'),
+                Image.asset(
+                  'assets/macechef.png',
+                  fit: BoxFit.contain,
+                )
+              ],
+            )),
         Expanded(child: Container()),
       ],
     ));

@@ -30,9 +30,11 @@ class FireBaseService {
                   DateTime.now(),
               winner: snap.data()['Winner'] == 0
                   ? 'NILL'
-                  : snap.data()['Winner'] == 1
-                      ? snap.data()['Team1']
-                      : snap.data()['Team2'],
+                  : snap.data()['Winner'] == 3
+                      ? 'DRAW'
+                      : snap.data()['Winner'] == 1
+                          ? snap.data()['Team1']
+                          : snap.data()['Team2'],
               voted: vote,
               group: snap.data()['Group']));
     }
@@ -137,38 +139,39 @@ class FireBaseService {
         .doc(s)
         .update({'Winner': val});
     QuerySnapshot qs;
+    if (val != 3) {
+      qs = await firestore
+          .collection('Fantasy Results')
+          .doc(s)
+          .collection(val == 1 ? 'Team 1' : 'Team 2')
+          .get();
 
-    qs = await firestore
-        .collection('Fantasy Results')
-        .doc(s)
-        .collection(val == 1 ? 'Team 1' : 'Team 2')
-        .get();
-
-    for (QueryDocumentSnapshot qds in qs.docs) {
-      DocumentSnapshot ds =
-          await firestore.collection('Users').doc(qds.id).get();
-      if (ds.exists) {
-        int mins =
-            -DateTime.tryParse(qds.data()['time']).difference(date).inMinutes;
-        await firestore.collection('Users').doc(qds.id).update({
-          'won': ds.data()['won'] + 1,
-          'time': (ds.data()['time'] ?? 0) + mins
-        });
+      for (QueryDocumentSnapshot qds in qs.docs) {
+        DocumentSnapshot ds =
+            await firestore.collection('Users').doc(qds.id).get();
+        if (ds.exists) {
+          int mins =
+              -DateTime.tryParse(qds.data()['time']).difference(date).inMinutes;
+          await firestore.collection('Users').doc(qds.id).update({
+            'won': ds.data()['won'] + 1,
+            'time': (ds.data()['time'] ?? 0) + mins
+          });
+        }
       }
-    }
-    qs = await firestore
-        .collection('Fantasy Results')
-        .doc(s)
-        .collection(val == 2 ? 'Team 1' : 'Team 2')
-        .get();
-    for (QueryDocumentSnapshot qds in qs.docs) {
-      DocumentSnapshot ds =
-          await firestore.collection('Users').doc(qds.id).get();
-      if (ds.exists) {
-        await firestore
-            .collection('Users')
-            .doc(qds.id)
-            .update({'lost': ds.data()['lost'] + 1});
+      qs = await firestore
+          .collection('Fantasy Results')
+          .doc(s)
+          .collection(val == 2 ? 'Team 1' : 'Team 2')
+          .get();
+      for (QueryDocumentSnapshot qds in qs.docs) {
+        DocumentSnapshot ds =
+            await firestore.collection('Users').doc(qds.id).get();
+        if (ds.exists) {
+          await firestore
+              .collection('Users')
+              .doc(qds.id)
+              .update({'lost': ds.data()['lost'] + 1});
+        }
       }
     }
   }

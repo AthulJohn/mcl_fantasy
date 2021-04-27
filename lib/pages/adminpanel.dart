@@ -226,9 +226,95 @@ class _AdminPanelState extends State<AdminPanel> {
                                           }
                                         })
                                   ]),
+                                  Row(children: [
+                                    Text("Draw"),
+                                    Radio(
+                                        value: data.matches[s].team2,
+                                        groupValue: data.matches[s].winner,
+                                        onChanged: (val) async {
+                                          bool alertloading = false;
+
+                                          bool connect = await connected();
+                                          if (connect) {
+                                            showDialog(
+                                                context: context,
+                                                builder: (context) {
+                                                  return AlertDialog(
+                                                    title: Text("Really?"),
+                                                    content: Text(
+                                                        "The match is draw?.."),
+                                                    actions: [
+                                                      TextButton(
+                                                        child: Text('Nah..'),
+                                                        onPressed: () {
+                                                          Navigator.pop(
+                                                              context);
+                                                        },
+                                                      ),
+                                                      TextButton(
+                                                        child: Text('Yeah..'),
+                                                        onPressed: () async {
+                                                          setState(() {
+                                                            alertloading = true;
+                                                          });
+                                                          try {
+                                                            data.updateWinner(
+                                                                s, "DRAW");
+                                                            await FireBaseService()
+                                                                .updatewinner(
+                                                                    s,
+                                                                    3,
+                                                                    data
+                                                                        .matches[
+                                                                            s]
+                                                                        .dateTime);
+                                                            List<String> ids =
+                                                                await FireBaseService()
+                                                                    .getPlayerID();
+                                                            OneSignal.shared
+                                                                .postNotification(
+                                                                    OSCreateNotification(
+                                                              playerIds: ids,
+                                                              content:
+                                                                  'A new match result has been updated! Check whether your prediction stands...',
+                                                              heading:
+                                                                  'Match Result Updated!',
+                                                            ));
+                                                          } catch (e) {
+                                                            setState(() {
+                                                              alertloading =
+                                                                  false;
+                                                            });
+                                                            print(e);
+                                                            ScaffoldMessenger
+                                                                    .of(context)
+                                                                .showSnackBar(
+                                                                    SnackBar(
+                                                                        content:
+                                                                            Text('Oops! Error submiting winner!')));
+                                                          }
+                                                          setState(() {
+                                                            alertloading =
+                                                                false;
+                                                          });
+                                                          Navigator.pop(
+                                                              context);
+                                                        },
+                                                      ),
+                                                    ],
+                                                  );
+                                                });
+                                          } else {
+                                            ScaffoldMessenger.of(context)
+                                                .showSnackBar(SnackBar(
+                                                    content: Text(
+                                                        'Oops, Could not connect to a network!')));
+                                          }
+                                        })
+                                  ]),
                                 ],
                               )
-                            : Text('Winner: ' + data.matches[s].winner),
+                            : Text(data.matches[s].winner),
                       ],
                     ),
                   ),

@@ -43,6 +43,14 @@ class UserStat {
     total++;
   }
 
+  void updatelost() {
+    lost++;
+  }
+
+  void updatewon() {
+    won++;
+  }
+
   String mail, name, image;
   int won, lost;
   int min, total;
@@ -99,6 +107,8 @@ class DataClass extends ChangeNotifier {
 
   void updateWinner(String r, String s) {
     matches[r].winnerIs(s);
+    if (s != 'DRAW')
+      matches[r].voted == s ? userstat.updatewon() : userstat.updatelost();
     notifyListeners();
   }
 
