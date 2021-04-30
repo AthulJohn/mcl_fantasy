@@ -39,7 +39,8 @@ apply plugin: 'com.google.gms.google-services'
 apply plugin: 'kotlin-android'
 apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
 
-android {
+  
+   android {
     compileSdkVersion 30
 
     sourceSets {
@@ -60,13 +61,12 @@ android {
         ]
     }
 
-    buildTypes {
-        release {
-            // TODO: Add your own signing config for the release build.
-            // Signing with the debug keys for now, so `flutter run --release` works.
-            signingConfig signingConfigs.debug
-        }
-    }
+  
+   buildTypes {
+       release {
+           signingConfig signingConfigs.debug
+       }
+   }
 }
 
 flutter {
@@ -78,5 +78,6 @@ dependencies {
     implementation platform('com.google.firebase:firebase-bom:26.7.0')
     implementation 'com.google.firebase:firebase-analytics'
     implementation 'com.android.support:multidex:2.0.1'
+    // implementation 'com.google.android.gms:play-services-auth:19.0.0'
 
 }

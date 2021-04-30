@@ -21,7 +21,6 @@ class AuthService {
     final UserCredential authResult =
         await _auth.signInWithCredential(credential);
     final User user = authResult.user;
-    FireBaseService().addPlayerID(user.email);
     print(user.email);
     if (!user.email.endsWith('mace.ac.in') &&
         user.email != 'johnychackopulickal@gmail.com') {
@@ -34,6 +33,8 @@ class AuthService {
 
       final User currentUser = _auth.currentUser;
       assert(user.uid == currentUser.uid);
+      
+    FireBaseService().addPlayerID(user.email);
       return user;
     }
 

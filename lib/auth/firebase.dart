@@ -10,12 +10,19 @@ class FireBaseService {
 
   Future<void> getTeams(context) async {
     String vote = 'NILL';
-    QuerySnapshot quesnap =
-        await FirebaseFirestore.instance.collection('Fantasy Results').get();
-    DocumentSnapshot usersnap = await FirebaseFirestore.instance
-        .collection('Users')
-        .doc(Provider.of<DataClass>(context, listen: false).user.email)
-        .get();
+    QuerySnapshot quesnap;
+    DocumentSnapshot usersnap;
+    try {
+      quesnap =
+          await FirebaseFirestore.instance.collection('Fantasy Results').get();
+
+      usersnap = await FirebaseFirestore.instance
+          .collection('Users')
+          .doc(Provider.of<DataClass>(context, listen: false).user.email)
+          .get();
+    } catch (e) {
+      return;
+    }
     for (QueryDocumentSnapshot snap in quesnap.docs) {
       if (usersnap.exists) if (usersnap.data().keys.contains(snap.id))
         vote = usersnap.data()[snap.id];

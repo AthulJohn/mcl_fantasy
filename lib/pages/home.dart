@@ -5,12 +5,14 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter/material.dart';
 import 'package:mcl_fantasy/auth/firebase.dart';
 import 'package:mcl_fantasy/classes/dataClass.dart';
+import 'package:mcl_fantasy/pages/teamInfo.dart';
 import 'package:mcl_fantasy/widgets/loading.dart';
 import 'package:mcl_fantasy/widgets/mainCard.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:provider/provider.dart';
 
 import 'adminpanel.dart';
+import 'schedule.dart';
 
 class Home extends StatefulWidget {
   final int page;
@@ -457,7 +459,35 @@ class _HomeState extends State<Home> {
                         ],
                       )
                     ],
-                  )
+                  ),
+                  Spacer(),
+                  Divider(),
+                  TextButton(
+                    child: Text(
+                      'View Team Details',
+                      style: GoogleFonts.aBeeZee(
+                          fontSize: 17, color: Colors.black),
+                    ),
+                    onPressed: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => TeamDetails()));
+                    },
+                  ),
+                  Divider(),
+                  TextButton(
+                      child: Text(
+                        'View Match Schedule',
+                        style: GoogleFonts.aBeeZee(
+                            fontSize: 17, color: Colors.black),
+                      ),
+                      onPressed: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => Schedule()));
+                      }),
                 ],
               ),
             ),
