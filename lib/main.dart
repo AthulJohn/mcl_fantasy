@@ -7,8 +7,6 @@ import 'package:mcl_fantasy/pages/starting.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:provider/provider.dart';
 
-//client id:  716901844731-7ptkh6o1n2n4jli2h4lpkfalpib2e2gj.apps.googleusercontent.com
-//client secret :  HT8gOq3T7o072Rd1Z3ibrAZ5
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
