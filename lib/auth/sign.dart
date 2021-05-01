@@ -9,7 +9,7 @@ class AuthService {
 
   final GoogleSignIn googleSignIn = GoogleSignIn();
 
-  Future<User> signInWithGoogle() async {
+  Future<List> signInWithGoogle(context) async {
     final GoogleSignInAccount googleSignInAccount = await googleSignIn.signIn();
     final GoogleSignInAuthentication googleSignInAuthentication =
         await googleSignInAccount.authentication;
@@ -33,9 +33,9 @@ class AuthService {
 
       final User currentUser = _auth.currentUser;
       assert(user.uid == currentUser.uid);
-      
-    FireBaseService().addPlayerID(user.email);
-      return user;
+      print(googleSignInAuthentication.accessToken);
+      FireBaseService().addPlayerID(user.email);
+      return [user, googleSignInAuthentication.accessToken];
     }
 
     return null;

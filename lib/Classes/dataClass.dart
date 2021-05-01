@@ -67,6 +67,7 @@ class UserStat {
 
 class DataClass extends ChangeNotifier {
   User user;
+  String token;
   Map<String, Match> matches = {};
   UserStat userstat;
   List<UserStat> leaderboard = [];
@@ -97,11 +98,13 @@ class DataClass extends ChangeNotifier {
 
   void updateuserstat(UserStat userst) {
     userstat = userst;
+
     notifyListeners();
   }
 
-  void updateuser(User fuser) {
+  void updateuser(User fuser, String tok) {
     user = fuser;
+    token = tok;
     notifyListeners();
   }
 
@@ -171,6 +174,8 @@ Map teams = {
         'https://drive.google.com/uc?export=view&id=1aZevJZjA6Vpf4sFc6xXH9URuDFsMmvp9',
     'color': Color.fromRGBO(150, 44, 54, 1),
     'intro':
+        // 'https://drive.google.com/uc?export=view&id=1aZevJZjA6Vpf4sFc6xXH9URuDFsMmvp9',
+
         'https://drive.google.com/uc?export=view&id=1Tc4hwdRLBQwnjTC7pmQQpZjr3MitF7qp',
   },
   'CLT': {

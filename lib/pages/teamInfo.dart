@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mcl_fantasy/classes/dataClass.dart';
@@ -41,8 +42,14 @@ class TeamDetails extends StatelessWidget {
                     Expanded(
                       child: Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 5.0),
-                        child: Image.network(teams[i]['intro'],
-                            fit: BoxFit.contain),
+                        child: CachedNetworkImage(
+                          imageUrl: teams[i]['intro'],
+                          fit: BoxFit.contain,
+                          httpHeaders: {
+                            "Authorization":
+                                "Bearer ${Provider.of<DataClass>(context).token}"
+                          },
+                        ),
                       ),
                     ),
                   ]),

@@ -10,25 +10,26 @@ import 'package:provider/provider.dart';
 class Starting extends StatelessWidget {
   void initialise(context) async {
     int page = 0;
-    User u;
+    List u;
     bool con = await connected();
     if (con) {
       if (AuthService().isnotSignedIn()) {
         try {
-          u = await AuthService().signInWithGoogle();
+          u = await AuthService().signInWithGoogle(context);
           if (u == null) {
             ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                 content: Text(
                     'Error signing in! Make sure you are using your mace mail ID.')));
             return;
           }
+
+          Provider.of<DataClass>(context, listen: false).updateuser(u[0], u[1]);
+          print('reached here');
         } catch (e) {
           ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(content: Text('Error signing in! Please try again')));
           return;
         }
-
-        Provider.of<DataClass>(context, listen: false).updateuser(u);
       }
       try {
         await FireBaseService().getTeams(context);
