@@ -105,7 +105,7 @@ class _AdminPanelState extends State<AdminPanel> {
                                                                     playerIds:
                                                                         ids,
                                                                     content:
-                                                                        'A new match result has been updated! Check whether your prediction stands...',
+                                                                        'The result of Match between ${teams[data.matches[s].team1]['name']} and ${teams[data.matches[s].team2]['name']} has been updated! Check whether your prediction stands...',
                                                                     heading:
                                                                         'Match Result Updated!'));
                                                           } catch (e) {
@@ -191,7 +191,7 @@ class _AdminPanelState extends State<AdminPanel> {
                                                                     playerIds:
                                                                         ids,
                                                                     content:
-                                                                        'A new match result has been updated! Check whether your prediction stands...',
+                                                                        'The result of Match between ${teams[data.matches[s].team1]['name']} and ${teams[data.matches[s].team2]['name']} has been updated! Check whether your prediction stands...',
                                                                     heading:
                                                                         'Match Result Updated!'));
                                                           } catch (e) {
@@ -276,7 +276,7 @@ class _AdminPanelState extends State<AdminPanel> {
                                                                     OSCreateNotification(
                                                               playerIds: ids,
                                                               content:
-                                                                  'A new match result has been updated! Check whether your prediction stands...',
+                                                                  'The result of Match between ${teams[data.matches[s].team1]['name']} and ${teams[data.matches[s].team2]['name']} has been updated! Check whether your prediction stands...',
                                                               heading:
                                                                   'Match Result Updated!',
                                                             ));

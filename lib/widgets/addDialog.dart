@@ -187,10 +187,10 @@ class _AddDialogState extends State<AddDialog> {
           onPressed: () async {
             dat = dat.add(Duration(hours: convert(), minutes: tm));
             Provider.of<DataClass>(context, listen: false).add(
-                'Match $newnumber',
+                'Match_$newnumber',
                 Match(team1: team1, team2: team2, dateTime: dat, group: group));
             Provider.of<DataClass>(context, listen: false).notify();
-            await FireBaseService().addmatch('Match $newnumber',
+            await FireBaseService().addmatch('Match_$newnumber',
                 Match(team1: team1, team2: team2, dateTime: dat, group: group));
             List<String> ids = await FireBaseService().getPlayerID();
             OneSignal.shared.postNotification(OSCreateNotification(

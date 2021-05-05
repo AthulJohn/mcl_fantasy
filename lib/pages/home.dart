@@ -82,6 +82,14 @@ class _HomeState extends State<Home> {
                 )
               ],
             ),
+            floatingActionButton: FloatingActionButton(
+              child: Icon(Icons.arrow_back),
+              onPressed: () {
+                pgc.animateToPage(0,
+                    duration: Duration(milliseconds: 500),
+                    curve: Curves.easeIn);
+              },
+            ),
             body: SafeArea(
               child: Provider.of<DataClass>(context) == null
                   ? Center(

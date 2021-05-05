@@ -131,7 +131,7 @@ class DataClass extends ChangeNotifier {
   void sortLeaderBoard() {
     leaderboard.sort((a, b) {
       if (a.won == b.won)
-        return a.min.compareTo(b.min);
+        return b.min.compareTo(a.min);
       else
         return b.won.compareTo(a.won);
     });
